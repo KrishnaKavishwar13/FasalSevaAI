@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SUPPORTED_LANGUAGES } from "@/config/languages";
+import { useTranslation } from "react-i18next";
 
 const ITEMS = [
   { to: "/storage/dashboard", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -21,6 +24,7 @@ const ITEMS = [
 ];
 
 export function StorageOwnerLayout() {
+  const { i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggle } = useTheme();
   const { user, logout } = useAuth();
@@ -80,6 +84,18 @@ export function StorageOwnerLayout() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Select value={i18n.language} onValueChange={(val) => i18n.changeLanguage(val)}>
+              <SelectTrigger className="w-[120px] h-8 text-xs bg-background">
+                <SelectValue placeholder="Language" />
+              </SelectTrigger>
+              <SelectContent>
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <SelectItem key={lang.code} value={lang.code} className="text-xs">
+                    {lang.native}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>

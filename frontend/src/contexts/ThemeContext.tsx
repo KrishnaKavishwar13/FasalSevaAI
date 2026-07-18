@@ -7,8 +7,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const saved = (typeof window !== "undefined" && localStorage.getItem("fasalseva.theme")) as Theme | null;
-    if (saved) setTheme(saved);
+    try {
+      const saved = (typeof window !== "undefined" && localStorage.getItem("fasalseva.theme")) as Theme | null;
+      if (saved) setTheme(saved);
+    } catch {}
   }, []);
 
   useEffect(() => {

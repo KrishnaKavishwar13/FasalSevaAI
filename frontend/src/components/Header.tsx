@@ -4,19 +4,28 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { Leaf, Moon, Sun, Menu, X, Languages } from "lucide-react";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
-const NAV = [
-  { to: "/", label: "Home" },
-  { to: "/#features", label: "Features" },
-  { to: "/#workflow", label: "How It Works" },
-  { to: "/dashboard", label: "Dashboard" },
-  { to: "/schemes", label: "Schemes" },
-  { to: "/contact", label: "Contact Us" },
-];
+import { useTranslation } from "react-i18next";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { SUPPORTED_LANGUAGES } from "@/config/languages";
 
 export function Header() {
   const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
+  const { t, i18n } = useTranslation();
+
+  const NAV = [
+    { to: "/", label: t("nav.home", "Home") },
+    { to: "/#features", label: t("nav.features", "Features") },
+    { to: "/#workflow", label: t("nav.workflow", "How It Works") },
+    { to: "/dashboard", label: t("nav.dashboard", "Dashboard") },
+    { to: "/schemes", label: t("nav.schemes", "Schemes") },
+    { to: "/contact", label: t("nav.contact", "Contact Us") },
+  ];
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 glass">
@@ -41,17 +50,28 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="hidden sm:inline-flex" aria-label="Language">
-            <Languages className="h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="hidden sm:inline-flex" aria-label="Language">
+                <Languages className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {SUPPORTED_LANGUAGES.map((lang) => (
+                <DropdownMenuItem key={lang.code} onClick={() => i18n.changeLanguage(lang.code)}>
+                  {lang.native}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
           <Button asChild variant="outline" size="sm" className="hidden md:inline-flex">
-            <Link to="/login">Login</Link>
+            <Link to="/login">{t("auth.login", "Login")}</Link>
           </Button>
           <Button asChild size="sm" className="hidden md:inline-flex gradient-primary text-primary-foreground">
-            <Link to="/signup">Get started</Link>
+            <Link to="/signup">{t("auth.get_started", "Get started")}</Link>
           </Button>
           <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen((o) => !o)} aria-label="Menu">
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -71,8 +91,8 @@ export function Header() {
                   className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted">{n.label}</Link>
               ))}
               <div className="mt-2 flex gap-2">
-                <Button asChild variant="outline" className="flex-1"><Link to="/login">Login</Link></Button>
-                <Button asChild className="flex-1 gradient-primary text-primary-foreground"><Link to="/signup">Get started</Link></Button>
+                <Button asChild variant="outline" className="flex-1"><Link to="/login">{t("auth.login", "Login")}</Link></Button>
+                <Button asChild className="flex-1 gradient-primary text-primary-foreground"><Link to="/signup">{t("auth.get_started", "Get started")}</Link></Button>
               </div>
             </div>
           </motion.div>

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 import { PublicLayout } from "@/layouts/PublicLayout";
 import { FarmerDashboardLayout } from "@/layouts/FarmerDashboardLayout";
@@ -67,10 +68,7 @@ function RequireStorageOwnerDashboard({ children }: { children: ReactNode }) {
 const queryClient = new QueryClient();
 
 export function App() {
-  // BrowserRouter uses window.location, so mount only after hydration.
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
+  const { i18n } = useTranslation();
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
@@ -123,7 +121,7 @@ export function App() {
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-          <ChatBot crop="" lang="hi" />
+          <ChatBot crop="" lang={i18n.language || "en"} />
           <Toaster richColors position="top-right" />
         </BrowserRouter>
       </AuthProvider>

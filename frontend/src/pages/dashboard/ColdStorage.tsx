@@ -16,9 +16,10 @@ import { Label } from "@/components/ui/label";
 import { Star, MapPin, IndianRupee, Package, ShieldCheck, ArrowRight, Building2 } from "lucide-react";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { useTranslation } from "react-i18next";
 
 export function ColdStorage() {
+  const { t } = useTranslation();
   const [crop, setCrop] = useState<CropName | "all">("all");
   const [maxDistance, setMaxDistance] = useState(20);
   const [locationReady, setLocationReady] = useState(false);
@@ -58,37 +59,37 @@ export function ColdStorage() {
   return (
     <div className="mx-auto max-w-7xl space-y-12">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Cold storage near you</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Live availability, crop compatibility, and 1-click booking.</p>
+        <h1 className="text-3xl font-bold tracking-tight">{t("storage.title", "Cold storage near you")}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t("storage.subtitle", "Live availability, crop compatibility, and 1-click booking.")}</p>
       </div>
 
       {/* SECTION 1: Nearby Storages */}
       <section className="space-y-6">
         <div>
-          <h2 className="text-2xl font-semibold flex items-center gap-2"><Building2 className="text-amber-500" /> Aapke Paas ke Cold Storage</h2>
-          <p className="text-sm text-muted-foreground mt-1">GPS se {maxDistance}km ke andar</p>
+          <h2 className="text-2xl font-semibold flex items-center gap-2"><Building2 className="text-amber-500" /> {t("storage.nearby", "Aapke Paas ke Cold Storage")}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{t("storage.nearby_desc", "GPS se {{distance}}km ke andar", { distance: maxDistance })}</p>
         </div>
         
         <Card className="p-4 sm:p-6 bg-muted/30">
           <div className="grid gap-4 md:grid-cols-3">
-            <div><Label>Crop compatibility</Label>
+            <div><Label>{t("storage.crop_compatibility", "Crop compatibility")}</Label>
               <Select value={crop} onValueChange={(v) => setCrop(v as CropName | "all")}>
                 <SelectTrigger className="mt-1 bg-background"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Any crop</SelectItem>
+                  <SelectItem value="all">{t("storage.any_crop", "Any crop")}</SelectItem>
                   {CROPS.map(c => <SelectItem key={c.name} value={c.name}>{c.emoji} {c.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div className="md:col-span-2">
-              <Label>Search radius: {maxDistance} km</Label>
+              <Label>{t("storage.search_radius", "Search radius: {{distance}} km", { distance: maxDistance })}</Label>
               <Slider className="mt-3" min={2} max={100} step={1} value={[maxDistance]} onValueChange={(v) => setMaxDistance(v[0])} />
             </div>
           </div>
         </Card>
 
         <div className="grid gap-4 lg:grid-cols-5">
-          <Card className="h-[420px] overflow-hidden lg:col-span-3">
+          <Card className="relative z-0 h-[420px] overflow-hidden lg:col-span-3">
             {isMounted && (
               <Suspense fallback={<Skeleton className="h-full w-full" />}>
                 <MapComponent facilities={nearbyStorages || []} />
@@ -98,8 +99,8 @@ export function ColdStorage() {
           <div className="space-y-3 lg:col-span-2 max-h-[420px] overflow-y-auto pr-2">
             {isLoading ? [1,2,3].map(i => <Skeleton key={i} className="h-40" />) :
               nearbyStorages.length === 0 ? (
-                <Card className="p-8 text-center text-sm text-muted-foreground">No facilities match your filters within {maxDistance}km.</Card>
-              ) : nearbyStorages.map(f => <FacilityCard key={f.id} f={f} />)}
+                <Card className="p-8 text-center text-sm text-muted-foreground">{t("storage.no_facilities", "No facilities match your filters within {{distance}}km.", { distance: maxDistance })}</Card>
+              ) : nearbyStorages.map(f => <FacilityCard key={f.id} f={f} t={t} />)}
           </div>
         </div>
       </section>
@@ -107,13 +108,13 @@ export function ColdStorage() {
       {/* SECTION 2: All Verified Partners */}
       <section className="space-y-6 pt-6 border-t">
         <div>
-          <h2 className="text-2xl font-semibold flex items-center gap-2">✅ Verified Partner Storages</h2>
-          <p className="text-sm text-muted-foreground mt-1">FasalSeva ke saath registered trusted cold storages across MP</p>
+          <h2 className="text-2xl font-semibold flex items-center gap-2">{t("storage.verified_partners", "✅ Verified Partner Storages")}</h2>
+          <p className="text-sm text-muted-foreground mt-1">{t("storage.verified_desc", "FasalSeva ke saath registered trusted cold storages across MP")}</p>
         </div>
         
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {isLoading ? [1,2,3,4,5,6].map(i => <Skeleton key={i} className="h-64" />) :
-            facilities?.map(f => <FacilityCard key={f.id} f={f} />)
+            facilities?.map(f => <FacilityCard key={f.id} f={f} t={t} />)
           }
         </div>
       </section>
@@ -121,10 +122,10 @@ export function ColdStorage() {
       {/* SECTION 3: Storage Owner CTA */}
       <section className="bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl p-8 border border-emerald-100 dark:border-emerald-900/30">
         <div className="max-w-3xl">
-          <h3 className="text-2xl font-bold text-emerald-900 dark:text-emerald-400">🏭 Cold Storage Owner Hain?</h3>
-          <p className="mt-2 text-emerald-800/80 dark:text-emerald-400/80 text-lg">FasalSeva partner banein — lakho farmers tak pahunchein aur apni storage efficiency badhayein.</p>
+          <h3 className="text-2xl font-bold text-emerald-900 dark:text-emerald-400">{t("storage.owner_cta_title", "🏭 Cold Storage Owner Hain?")}</h3>
+          <p className="mt-2 text-emerald-800/80 dark:text-emerald-400/80 text-lg">{t("storage.owner_cta_desc", "FasalSeva partner banein — lakho farmers tak pahunchein aur apni storage efficiency badhayein.")}</p>
           <Button asChild className="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white border-0" size="lg">
-            <Link to="/storage/login">Cold Storage Portal <ArrowRight className="ml-2 h-5 w-5" /></Link>
+            <Link to="/storage/login">{t("storage.portal_link", "Cold Storage Portal")} <ArrowRight className="ml-2 h-5 w-5" /></Link>
           </Button>
         </div>
       </section>
@@ -132,7 +133,7 @@ export function ColdStorage() {
   );
 }
 
-function FacilityCard({ f }: { f: StorageFacility }) {
+function FacilityCard({ f, t }: { f: StorageFacility, t: any }) {
   return (
     <Card className="overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow">
       <img src={f.image} alt="" className="h-32 w-full object-cover" loading="lazy" />
@@ -147,7 +148,7 @@ function FacilityCard({ f }: { f: StorageFacility }) {
           </span>
         </div>
         <div className="mt-3 grid grid-cols-2 gap-3 text-xs">
-          <div><Package className="mr-1 inline h-3.5 w-3.5 text-muted-foreground" />{f.available_tons}/{f.capacity_tons} tons free</div>
+          <div><Package className="mr-1 inline h-3.5 w-3.5 text-muted-foreground" />{f.available_tons}/{f.capacity_tons} {t("storage.tons_free", "tons free")}</div>
           <div><IndianRupee className="mr-1 inline h-3.5 w-3.5 text-muted-foreground" />₹{f.cost_per_kg_day}/kg/day</div>
         </div>
         <div className="mt-3 flex flex-wrap gap-1">
@@ -155,26 +156,26 @@ function FacilityCard({ f }: { f: StorageFacility }) {
           {f.compatible_crops.length > 4 && <span className="text-[10px] text-muted-foreground">+{f.compatible_crops.length - 4}</span>}
         </div>
         <div className="mt-auto pt-4 flex gap-2">
-          <DetailsDialog f={f} />
-          <BookDialog f={f} />
+          <DetailsDialog f={f} t={t} />
+          <BookDialog f={f} t={t} />
         </div>
       </div>
     </Card>
   );
 }
 
-function DetailsDialog({ f }: { f: StorageFacility }) {
+function DetailsDialog({ f, t }: { f: StorageFacility, t: any }) {
   return (
     <Dialog>
-      <DialogTrigger asChild><Button variant="outline" size="sm" className="flex-1">Details</Button></DialogTrigger>
+      <DialogTrigger asChild><Button variant="outline" size="sm" className="flex-1">{t("storage.details", "Details")}</Button></DialogTrigger>
       <DialogContent>
         <DialogHeader><DialogTitle>{f.name}</DialogTitle></DialogHeader>
         <img src={f.image} alt="" className="h-40 w-full rounded-lg object-cover" />
         <div className="grid gap-2 text-sm">
           <p><MapPin className="mr-1 inline h-4 w-4 text-muted-foreground" />{f.address}</p>
-          <p><Package className="mr-1 inline h-4 w-4 text-muted-foreground" />{f.available_tons} of {f.capacity_tons} tons available</p>
-          <p><IndianRupee className="mr-1 inline h-4 w-4 text-muted-foreground" />₹{f.cost_per_kg_day} per kg per day</p>
-          <div><p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">Amenities</p>
+          <p><Package className="mr-1 inline h-4 w-4 text-muted-foreground" />{f.available_tons} {t("storage.available_capacity", "of {{capacity}} tons available", { capacity: f.capacity_tons })}</p>
+          <p><IndianRupee className="mr-1 inline h-4 w-4 text-muted-foreground" />₹{f.cost_per_kg_day} {t("storage.per_kg_day", "per kg per day")}</p>
+          <div><p className="mb-1 text-xs uppercase tracking-wide text-muted-foreground">{t("storage.amenities", "Amenities")}</p>
             <div className="flex flex-wrap gap-1">{f.amenities.map(a => <span key={a} className="rounded-full bg-muted px-2 py-1 text-xs"><ShieldCheck className="mr-1 inline h-3 w-3" />{a}</span>)}</div>
           </div>
         </div>
@@ -183,7 +184,7 @@ function DetailsDialog({ f }: { f: StorageFacility }) {
   );
 }
 
-function BookDialog({ f }: { f: StorageFacility }) {
+function BookDialog({ f, t }: { f: StorageFacility, t: any }) {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [qty, setQty] = useState(100);
@@ -193,7 +194,7 @@ function BookDialog({ f }: { f: StorageFacility }) {
   const mutation = useMutation({
     mutationFn: () => storageService.bookStorage({ facility_id: f.id, crop, quantity_kg: qty, duration_days: days }),
     onSuccess: (b) => {
-      toast.success(`Booking confirmed · ${b.facility_name}`, { description: `Estimated cost ${new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:0}).format(b.estimated_cost)}` });
+      toast.success(`${t("storage.booking_confirmed", "Booking confirmed")} · ${b.facility_name}`, { description: `${t("storage.estimated_cost", "Estimated cost")} ${new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:0}).format(b.estimated_cost)}` });
       qc.invalidateQueries({ queryKey: ["bookings"] });
       setOpen(false);
     },
@@ -205,30 +206,30 @@ function BookDialog({ f }: { f: StorageFacility }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm" className="flex-1 gradient-primary text-primary-foreground" disabled={f.available_tons === 0}>
-          {f.available_tons === 0 ? "Full" : "Book"}
+          {f.available_tons === 0 ? t("storage.full", "Full") : t("storage.book", "Book")}
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader><DialogTitle>Book {f.name}</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{t("storage.book", "Book")} {f.name}</DialogTitle></DialogHeader>
         <div className="grid gap-4">
-          <div><Label>Crop</Label>
+          <div><Label>{t("analysis.crop_label", "Crop")}</Label>
             <Select value={crop} onValueChange={(v) => setCrop(v as CropName)}>
               <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
               <SelectContent>{f.compatible_crops.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
             </Select>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <div><Label>Quantity (kg)</Label><Input type="number" className="mt-1" value={qty} onChange={e => setQty(Number(e.target.value))} /></div>
-            <div><Label>Duration (days)</Label><Input type="number" className="mt-1" value={days} onChange={e => setDays(Number(e.target.value))} /></div>
+            <div><Label>{t("storage.quantity", "Quantity (kg)")}</Label><Input type="number" className="mt-1" value={qty} onChange={e => setQty(Number(e.target.value))} /></div>
+            <div><Label>{t("storage.duration", "Duration (days)")}</Label><Input type="number" className="mt-1" value={days} onChange={e => setDays(Number(e.target.value))} /></div>
           </div>
-          {overCap && <p className="text-xs text-destructive">Quantity exceeds available capacity.</p>}
+          {overCap && <p className="text-xs text-destructive">{t("storage.quantity_exceeds", "Quantity exceeds available capacity.")}</p>}
           <div className="rounded-lg bg-muted p-3 text-sm">
-            <p>Estimated cost <b className="float-right">{new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:0}).format(estimate)}</b></p>
+            <p>{t("storage.estimated_cost", "Estimated cost")} <b className="float-right">{new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:0}).format(estimate)}</b></p>
           </div>
         </div>
         <DialogFooter>
           <Button onClick={() => mutation.mutate()} disabled={mutation.isPending || overCap} className="gradient-primary text-primary-foreground">
-            {mutation.isPending ? "Booking…" : "Confirm booking"}
+            {mutation.isPending ? t("storage.booking", "Booking…") : t("storage.confirm_booking", "Confirm booking")}
           </Button>
         </DialogFooter>
       </DialogContent>

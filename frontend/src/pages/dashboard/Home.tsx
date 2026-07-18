@@ -15,6 +15,7 @@ import { CROPS } from "@/constants/data";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { analysisService, interpolateDailyPrices } from "@/services/analysisService";
+import { useTranslation } from "react-i18next";
 
 const GOVT_SCHEMES = [
   { hindi_name: "पीएम किसान सम्मान निधि", hindi_benefit: "₹6,000 प्रति वर्ष सीधे बैंक खाते में", apply_url: "#" },
@@ -29,6 +30,7 @@ const GOVT_SCHEMES = [
 
 export function DashboardHome() {
   const { user, setUser } = useAuth();
+  const { t } = useTranslation();
   
   // Onboarding State
   const [onboardingStep, setOnboardingStep] = useState(1);
@@ -59,7 +61,7 @@ export function DashboardHome() {
       setLat(22.7196);
       setLng(75.8577);
       setOnboardingStep(2);
-      toast.error("GPS blocked. Using default location (Indore).");
+      toast.error(t("dashboard.gps_blocked", "GPS blocked. Using default location (Indore)."));
     }
   };
 
@@ -74,7 +76,7 @@ export function DashboardHome() {
     };
     authService.updateCurrentUser(updatedUser);
     setUser(updatedUser);
-    toast.success("Profile saved!");
+    toast.success(t("dashboard.profile_saved", "Profile saved!"));
   };
 
   useEffect(() => {
@@ -135,19 +137,19 @@ export function DashboardHome() {
             {onboardingStep === 1 && (
               <motion.div key="step1" initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} exit={{opacity:0, x:-20}} className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold">नमस्ते {user.name.split(" ")[0]} जी! 🌾</h2>
-                  <p className="mt-2 text-muted-foreground text-sm">FasalSeva आपको सबसे सही सलाह देगा।</p>
-                  <p className="mt-1 text-muted-foreground text-sm">शुरुआत करने के लिए, अपनी लोकेशन दें:</p>
+                  <h2 className="text-2xl font-bold">{t("onboarding.greeting", "Namaste {{name}} ji! 🌾", { name: user.name.split(" ")[0] })}</h2>
+                  <p className="mt-2 text-muted-foreground text-sm">{t("onboarding.subtitle1", "FasalSeva will give you the right advice.")}</p>
+                  <p className="mt-1 text-muted-foreground text-sm">{t("onboarding.subtitle2", "To start, provide your location:")}</p>
                 </div>
-                <Button onClick={captureGPS} className="w-full h-12 text-lg"><MapPin className="mr-2" /> मेरी लोकेशन दें</Button>
+                <Button onClick={captureGPS} className="w-full h-12 text-lg"><MapPin className="mr-2" /> {t("onboarding.give_location", "Give my location")}</Button>
               </motion.div>
             )}
 
             {onboardingStep === 2 && (
               <motion.div key="step2" initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} exit={{opacity:0, x:-20}} className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold">आपकी मुख्य फसल क्या है?</h2>
-                  <p className="mt-2 text-muted-foreground text-sm">हम आपको इसी फसल के बाज़ार भाव दिखाएंगे।</p>
+                  <h2 className="text-2xl font-bold">{t("onboarding.step2_title", "What is your main crop?")}</h2>
+                  <p className="mt-2 text-muted-foreground text-sm">{t("onboarding.step2_subtitle", "We will show you market prices for this crop.")}</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto pr-2 pb-2">
                   {CROPS.map(c => (
@@ -163,8 +165,8 @@ export function DashboardHome() {
             {onboardingStep === 3 && (
               <motion.div key="step3" initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} exit={{opacity:0, x:-20}} className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold">आप किस राज्य में हैं?</h2>
-                  <p className="mt-2 text-muted-foreground text-sm">बाज़ार भाव राज्य पर निर्भर करते हैं।</p>
+                  <h2 className="text-2xl font-bold">{t("onboarding.step3_title", "Which state are you in?")}</h2>
+                  <p className="mt-2 text-muted-foreground text-sm">{t("onboarding.step3_subtitle", "Market prices depend on the state.")}</p>
                 </div>
                 <select value={selectedState} onChange={e => setSelectedState(e.target.value)} className="w-full p-3 rounded-xl border bg-background">
                   <option>Madhya Pradesh</option>
@@ -172,7 +174,7 @@ export function DashboardHome() {
                   <option>Gujarat</option>
                   <option>Uttar Pradesh</option>
                 </select>
-                <Button onClick={finishOnboarding} className="w-full h-12 text-lg">डैशबोर्ड पर जाएं <ArrowRight className="ml-2" /></Button>
+                <Button onClick={finishOnboarding} className="w-full h-12 text-lg">{t("onboarding.go_to_dashboard", "Go to dashboard")} <ArrowRight className="ml-2" /></Button>
               </motion.div>
             )}
           </AnimatePresence>
@@ -185,11 +187,11 @@ export function DashboardHome() {
     <div className="mx-auto max-w-7xl space-y-6">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col justify-between gap-2 md:flex-row md:items-end">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Namaste, {user?.name?.split(" ")[0] ?? "Farmer"} 👋</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Here's a quick look at your farm today.</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t("dashboard.greeting", "Namaste, {{name}} 👋", { name: user?.name?.split(" ")[0] ?? t("dashboard.farmer", "Farmer") })}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t("dashboard.quick_look", "Here's a quick look at your farm today.")}</p>
         </div>
         <Button asChild className="gradient-primary text-primary-foreground">
-          <Link to="/dashboard/new-analysis">New analysis <ArrowRight className="ml-2 h-4 w-4" /></Link>
+          <Link to="/dashboard/new-analysis">{t("dashboard.new_analysis", "New analysis")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
         </Button>
       </motion.div>
 
@@ -198,11 +200,11 @@ export function DashboardHome() {
         <Card className="p-5 flex items-center gap-4">
           <div className="grid h-12 w-12 place-items-center rounded-xl bg-blue-500/10 text-blue-500"><Cloud className="h-6 w-6" /></div>
           <div>
-            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Aaj ka Mausam</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{t("dashboard.weather_title", "Today's Weather")}</p>
             {weather ? (
               <>
-                <p className="text-lg font-bold">{weather.temp}°C | {weather.humidity}% Nami</p>
-                {weather.rain > 0 && <p className="text-xs text-blue-500 font-medium mt-0.5">🌧️ Baarish ki sambhavna</p>}
+                <p className="text-lg font-bold">{weather.temp}°C | {weather.humidity}% {t("dashboard.humidity", "Humidity")}</p>
+                {weather.rain > 0 && <p className="text-xs text-blue-500 font-medium mt-0.5">🌧️ {t("dashboard.rain_chance", "Chance of rain")}</p>}
               </>
             ) : <Skeleton className="h-6 w-24 mt-1" />}
           </div>
@@ -212,11 +214,11 @@ export function DashboardHome() {
         <Card className="p-5 flex items-center gap-4">
           <div className="grid h-12 w-12 place-items-center rounded-xl bg-green-500/10 text-green-500"><TrendingUp className="h-6 w-6" /></div>
           <div>
-            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{user?.mainCrop || 'Crop'} ka Bhav</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{t("dashboard.crop_price_title", "{{crop}}'s Price", { crop: user?.mainCrop || t("dashboard.crop", 'Crop') })}</p>
             {todayPrice !== null ? (
               <>
                 <p className="text-lg font-bold text-green-600">₹{todayPrice}/q</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Agmarknet se live</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{t("dashboard.live_from_agmarknet", "Live from Agmarknet")}</p>
               </>
             ) : <Skeleton className="h-6 w-24 mt-1" />}
           </div>
@@ -226,11 +228,11 @@ export function DashboardHome() {
         <Card className="p-5 flex items-center gap-4">
           <div className="grid h-12 w-12 place-items-center rounded-xl bg-amber-500/10 text-amber-500"><Wheat className="h-6 w-6" /></div>
           <div className="flex-1 overflow-hidden">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Nazdiki Storage</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{t("dashboard.nearest_storage", "Nearest Storage")}</p>
             {nearestStorage ? (
               <>
                 <p className="text-sm font-bold truncate">{nearestStorage.name}</p>
-                <p className="text-xs text-amber-600 font-medium mt-0.5">{nearestStorage.distance_km} km door ({storageCount} total)</p>
+                <p className="text-xs text-amber-600 font-medium mt-0.5">{t("dashboard.storage_dist", "{{dist}} km away ({{count}} total)", { dist: nearestStorage.distance_km, count: storageCount })}</p>
               </>
             ) : <Skeleton className="h-6 w-24 mt-1" />}
           </div>
@@ -240,7 +242,7 @@ export function DashboardHome() {
         <Card className="p-5 flex items-center gap-4">
           <div className="grid h-12 w-12 place-items-center rounded-xl bg-purple-500/10 text-purple-500"><Sparkles className="h-6 w-6" /></div>
           <div className="flex-1 overflow-hidden">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">Aaj ki Yojana</p>
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">{t("dashboard.scheme_of_day", "Scheme of the Day")}</p>
             {schemeOfDay ? (
               <>
                 <p className="text-sm font-bold truncate">{schemeOfDay.hindi_name}</p>
@@ -255,9 +257,9 @@ export function DashboardHome() {
         <Card className="p-6 lg:col-span-2">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Price trend (illustrative)</p>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">{t("dashboard.price_trend_title", "Price trend (illustrative)")}</p>
               <h3 className="mt-1 text-xl font-semibold">
-                {latest ? `${latest.crop} — ₹${latest.price.today}/qtl → ₹${latest.price.after_15_days}/qtl` : "Run an analysis to see forecasts"}
+                {latest ? `${latest.crop} — ₹${latest.price.today}/qtl → ₹${latest.price.after_15_days}/qtl` : t("dashboard.run_analysis_forecasts", "Run an analysis to see forecasts")}
               </h3>
             </div>
             {latest && <RiskBadge risk={latest.spoilage.risk_level} />}
@@ -284,12 +286,12 @@ export function DashboardHome() {
                   <TrendingUp className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">No price trend data</p>
-                  <p className="mt-1 max-w-xs text-xs">Run a price or shelf-life analysis to unlock AI-powered market forecasts.</p>
+                  <p className="font-medium text-foreground">{t("dashboard.no_price_data", "No price trend data")}</p>
+                  <p className="mt-1 max-w-xs text-xs">{t("dashboard.run_analysis_unlock", "Run a price or shelf-life analysis to unlock AI-powered market forecasts.")}</p>
                 </div>
                 <Button asChild className="gradient-primary mt-2 shadow-card" size="sm">
                   <Link to="/dashboard/new-analysis">
-                    <Sparkles className="mr-2 h-4 w-4" /> Start analysis
+                    <Sparkles className="mr-2 h-4 w-4" /> {t("dashboard.start_analysis", "Start analysis")}
                   </Link>
                 </Button>
               </div>
@@ -299,14 +301,14 @@ export function DashboardHome() {
 
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Recent analyses</h3>
-            <Button asChild variant="ghost" size="sm"><Link to="/dashboard/history">View all</Link></Button>
+            <h3 className="text-lg font-semibold">{t("dashboard.recent_analyses", "Recent analyses")}</h3>
+            <Button asChild variant="ghost" size="sm"><Link to="/dashboard/history">{t("dashboard.view_all", "View all")}</Link></Button>
           </div>
           {historyLoading ? (
             <div className="space-y-3">{[1,2,3].map(i => <Skeleton key={i} className="h-14 w-full" />)}</div>
           ) : (history?.length ?? 0) === 0 ? (
             <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-              No analyses yet. <Link to="/dashboard/new-analysis" className="text-primary underline">Run your first</Link>.
+              {t("dashboard.no_analyses_yet", "No analyses yet.")} <Link to="/dashboard/new-analysis" className="text-primary underline">{t("dashboard.run_your_first", "Run your first")}</Link>.
             </div>
           ) : (
             <div className="divide-y divide-border/60">

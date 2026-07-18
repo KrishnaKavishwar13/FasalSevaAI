@@ -15,6 +15,7 @@ import { marketPredictionService } from "@/services/marketPredictionService";
 import type { PricePredictionInput, PricePredictionOutput } from "@/types";
 import { toast } from "sonner";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useTranslation } from "react-i18next";
 
 type HistoryEntry = {
   id: string;
@@ -49,6 +50,7 @@ function trendBadgeClass(trend: string) {
 }
 
 export function PricePrediction() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [form, setForm] = useState<PricePredictionInput>(defaultForm);
   const [result, setResult] = useState<PricePredictionOutput | null>(null);
@@ -66,12 +68,12 @@ export function PricePrediction() {
         });
         if (res.data.found && res.data.current_price > 0) {
           setForm(f => ({ ...f, current_price: res.data.current_price }));
-          setPriceSource(`📡 Live from Agmarknet — ${res.data.market} (${res.data.date})`);
+          setPriceSource(t("price_prediction.live_agmarknet", "📡 Live from Agmarknet — {{market}} ({{date}})", { market: res.data.market, date: res.data.date }));
         } else {
-          setPriceSource('⚠️ Price not found — please enter manually');
+          setPriceSource(t("price_prediction.price_not_found", "⚠️ Price not found — please enter manually"));
         }
       } catch {
-        setPriceSource('⚠️ Could not fetch price — enter manually');
+        setPriceSource(t("price_prediction.could_not_fetch", "⚠️ Could not fetch price — enter manually"));
       }
     }
     fetchCurrentPrice();
@@ -212,10 +214,10 @@ export function PricePrediction() {
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <Button variant="ghost" size="sm" className="mb-3 -ml-3" onClick={() => navigate(-1)}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back
+            <ArrowLeft className="mr-2 h-4 w-4" /> {t("analysis.back", "Back")}
           </Button>
-          <h1 className="text-3xl font-bold tracking-tight">Market Price Prediction</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Predict mandi price after the next 15 days.</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t("price_prediction.title", "Market Price Prediction")}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t("price_prediction.subtitle", "Predict mandi price after the next 15 days.")}</p>
         </div>
         <Badge className="border-primary/20 bg-primary/10 text-primary">AI Powered</Badge>
       </motion.div>
@@ -225,9 +227,9 @@ export function PricePrediction() {
           <div className="rounded-2xl border border-primary/10 bg-gradient-to-br from-amber-500/15 via-background to-primary/10 p-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">Data-driven market outlook</p>
-                <h2 className="mt-2 text-2xl font-semibold">Modern price forecasting</h2>
-                <p className="mt-2 max-w-xl text-sm text-muted-foreground">Plan your sale timing with a forward-looking mandi price forecast tailored to your crop and region.</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">{t("price_prediction.data_driven", "Data-driven market outlook")}</p>
+                <h2 className="mt-2 text-2xl font-semibold">{t("price_prediction.modern_forecasting", "Modern price forecasting")}</h2>
+                <p className="mt-2 max-w-xl text-sm text-muted-foreground">{t("price_prediction.plan_sale", "Plan your sale timing with a forward-looking mandi price forecast tailored to your crop and region.")}</p>
               </div>
               <div className="grid h-16 w-16 place-items-center rounded-2xl bg-background/80 shadow-card">
                 <BarChart3 className="h-8 w-8 text-primary" />
@@ -238,9 +240,9 @@ export function PricePrediction() {
           <form onSubmit={handleSubmit} className="mt-6 space-y-6">
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <Label>Crop</Label>
+                <Label>{t("analysis.crop_label", "Crop")}</Label>
                 <Select value={form.crop} onValueChange={(value) => setForm((prev) => ({ ...prev, crop: value as PricePredictionInput["crop"] }))}>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Select crop" /></SelectTrigger>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder={t("analysis.select_crop", "Select crop")} /></SelectTrigger>
                   <SelectContent>
                     {CROPS.map((crop) => (
                       <SelectItem key={crop.name} value={crop.name}>{crop.emoji} {crop.name}</SelectItem>
@@ -249,7 +251,7 @@ export function PricePrediction() {
                 </Select>
               </div>
               <div>
-                <Label>Current price</Label>
+                <Label>{t("price_prediction.current_price", "Current price")}</Label>
                 <Input className="mt-1" type="number" value={form.current_price} onChange={(event) => setForm((prev) => ({ ...prev, current_price: Number(event.target.value) }))} />
                 {priceSource && (
                     <p className="text-xs mt-1" style={{ color: priceSource.includes('Live') ? 'var(--color-emerald-600)' : '#E8A020' }}>
@@ -260,9 +262,9 @@ export function PricePrediction() {
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <Label>State</Label>
+                <Label>{t("analysis.state_label", "State")}</Label>
                 <Select value={form.state} onValueChange={(value) => setForm((prev) => ({ ...prev, state: value }))}>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Select state" /></SelectTrigger>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder={t("analysis.select_state", "Select state")} /></SelectTrigger>
                   <SelectContent>{STATES.map((state) => <SelectItem key={state} value={state}>{state}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
@@ -270,18 +272,18 @@ export function PricePrediction() {
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <Label>Month</Label>
+                <Label>{t("price_prediction.month", "Month")}</Label>
                 <Select value={`${form.month}`} onValueChange={(value) => setForm((prev) => ({ ...prev, month: Number(value) }))}>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Select month" /></SelectTrigger>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder={t("price_prediction.select_month", "Select month")} /></SelectTrigger>
                   <SelectContent>
                     {Array.from({ length: 12 }, (_, index) => index + 1).map((month) => <SelectItem key={month} value={`${month}`}>{new Date(2024, month - 1).toLocaleString("default", { month: "long" })}</SelectItem>)}
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label>Week</Label>
+                <Label>{t("price_prediction.week", "Week")}</Label>
                 <Select value={`${form.week}`} onValueChange={(value) => setForm((prev) => ({ ...prev, week: Number(value) }))}>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Select week" /></SelectTrigger>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder={t("price_prediction.select_week", "Select week")} /></SelectTrigger>
                   <SelectContent>
                     {Array.from({ length: 52 }, (_, index) => index + 1).map((week) => <SelectItem key={week} value={`${week}`}>Week {week}</SelectItem>)}
                   </SelectContent>
@@ -291,10 +293,10 @@ export function PricePrediction() {
 
             <div className="flex flex-wrap gap-3">
               <Button type="submit" className="gradient-primary text-primary-foreground" disabled={loading}>
-                {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Predicting...</> : "Predict Future Price"}
+                {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("shelf_life.predicting", "Predicting...")}</> : t("price_prediction.predict_btn", "Predict Future Price")}
               </Button>
               <Button type="button" variant="outline" onClick={handleReset}>
-                <RotateCcw className="mr-2 h-4 w-4" /> Reset
+                <RotateCcw className="mr-2 h-4 w-4" /> {t("price_prediction.reset", "Reset")}
               </Button>
             </div>
           </form>
@@ -304,8 +306,8 @@ export function PricePrediction() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">Forecast</p>
-                <h3 className="mt-1 text-xl font-semibold">Live market outlook</h3>
+                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">{t("price_prediction.forecast", "Forecast")}</p>
+                <h3 className="mt-1 text-xl font-semibold">{t("price_prediction.live_market_outlook", "Live market outlook")}</h3>
               </div>
               {result && <Badge className={trendBadgeClass(result.trend)}>{result.trend}</Badge>}
             </div>
@@ -323,35 +325,35 @@ export function PricePrediction() {
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-6 space-y-4">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-primary/10 to-amber-500/10 p-4">
-                    <p className="text-sm text-muted-foreground">Today’s Price</p>
+                    <p className="text-sm text-muted-foreground">{t("price_prediction.todays_price", "Today’s Price")}</p>
                     <p className="mt-1 text-2xl font-semibold">₹{result.current_price}</p>
                   </div>
                   <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-emerald-500/10 to-primary/10 p-4">
-                    <p className="text-sm text-muted-foreground">Predicted Price</p>
+                    <p className="text-sm text-muted-foreground">{t("price_prediction.predicted_price", "Predicted Price")}</p>
                     <p className="mt-1 text-2xl font-semibold">₹{result.price_after_15_days}</p>
                   </div>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-3">
                   <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Expected Increase</p>
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("price_prediction.expected_increase", "Expected Increase")}</p>
                     <p className="mt-1 text-lg font-semibold">₹{result.difference}</p>
                   </div>
                   <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Confidence</p>
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("price_prediction.confidence", "Confidence")}</p>
                     <p className="mt-1 text-lg font-semibold">{result.confidence}%</p>
                   </div>
                   <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Trend</p>
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("price_prediction.trend", "Trend")}</p>
                     <p className="mt-1 text-lg font-semibold">{result.trend}</p>
                   </div>
                 </div>
                 <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
-                  <div className="mb-3 flex items-center gap-2 text-sm font-semibold"><Sparkles className="h-4 w-4 text-primary" /> Recommendation</div>
+                  <div className="mb-3 flex items-center gap-2 text-sm font-semibold"><Sparkles className="h-4 w-4 text-primary" /> {t("price_prediction.recommendation", "Recommendation")}</div>
                   <p className="text-sm text-muted-foreground">{recommendation}</p>
                 </div>
                 <div className="rounded-2xl border border-border/60 bg-background/70 p-4">
                   <div className="mb-3 flex items-center justify-between">
-                    <p className="text-sm font-semibold">Price trend line chart</p>
+                    <p className="text-sm font-semibold">{t("price_prediction.price_trend_chart", "Price trend line chart")}</p>
                     {result.trend === "Increasing" ? <ArrowUp className="h-4 w-4 text-emerald-600" /> : result.trend === "Decreasing" ? <ArrowDown className="h-4 w-4 text-rose-600" /> : <div className="h-4 w-4 rounded-full bg-sky-500" />}
                   </div>
                   <div className="h-52">
@@ -373,8 +375,8 @@ export function PricePrediction() {
                   <BarChart3 className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <p className="font-medium text-foreground">No price forecast yet</p>
-                  <p className="mt-1 max-w-[250px] text-xs leading-relaxed">Submit the form to view a detailed projection of the future mandi price curve.</p>
+                  <p className="font-medium text-foreground">{t("price_prediction.no_forecast", "No price forecast yet")}</p>
+                  <p className="mt-1 max-w-[250px] text-xs leading-relaxed">{t("price_prediction.no_forecast_desc", "Submit the form to view a detailed projection of the future mandi price curve.")}</p>
                 </div>
               </div>
             )}
@@ -384,10 +386,10 @@ export function PricePrediction() {
             <Card className="p-6">
               <div className="flex flex-wrap gap-2">
                 <Button type="button" variant="outline" size="sm" onClick={handleDownload}>
-                  <Download className="mr-2 h-4 w-4" /> Download report
+                  <Download className="mr-2 h-4 w-4" /> {t("price_prediction.download_report", "Download report")}
                 </Button>
                 <Button type="button" variant="outline" size="sm" onClick={handleShare}>
-                  <Share2 className="mr-2 h-4 w-4" /> Share result
+                  <Share2 className="mr-2 h-4 w-4" /> {t("price_prediction.share_result", "Share result")}
                 </Button>
               </div>
             </Card>
@@ -398,14 +400,14 @@ export function PricePrediction() {
       <Card className="p-6">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">Prediction history</p>
-            <h3 className="mt-1 text-xl font-semibold">Recent predictions</h3>
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground">{t("price_prediction.prediction_history", "Prediction history")}</p>
+            <h3 className="mt-1 text-xl font-semibold">{t("price_prediction.recent_predictions", "Recent predictions")}</h3>
           </div>
           <div className="rounded-full bg-primary/10 p-2 text-primary"><History className="h-4 w-4" /></div>
         </div>
         <Separator className="my-4" />
         {history.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border/60 bg-muted/30 p-6 text-sm text-muted-foreground">No predictions yet. Run your first market forecast to build a trend history.</div>
+          <div className="rounded-2xl border border-dashed border-border/60 bg-muted/30 p-6 text-sm text-muted-foreground">{t("price_prediction.no_history", "No predictions yet. Run your first market forecast to build a trend history.")}</div>
         ) : (
           <div className="space-y-3">
             {history.map((entry) => (

@@ -5,24 +5,29 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SUPPORTED_LANGUAGES } from "@/config/languages";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { VoiceAssistant } from "@/components/VoiceAssistant";
+import { useTranslation } from "react-i18next";
 
 const ITEMS = [
-  { to: "/dashboard",              label: "Dashboard",     icon: LayoutDashboard, end: true },
-  { to: "/dashboard/new-analysis", label: "New Analysis",  icon: FilePlus2 },
-  { to: "/dashboard/history",      label: "History",       icon: History },
-  { to: "/dashboard/market",       label: "Market",        icon: LandPlot },
-  { to: "/dashboard/cold-storage", label: "Cold Storage",  icon: Warehouse },
-  { to: "/dashboard/weather",      label: "Weather",       icon: CloudSun },
-  { to: "/dashboard/schemes",      label: "Gov Schemes",   icon: LandPlot },
-  { to: "/dashboard/profile",      label: "Profile",       icon: User },
-  { to: "/dashboard/settings",     label: "Settings",      icon: Settings },
+  { to: "/dashboard",              tKey: "nav.dashboard",     icon: LayoutDashboard, end: true },
+  { to: "/dashboard/new-analysis", tKey: "nav.new_analysis",  icon: FilePlus2 },
+  { to: "/dashboard/history",      tKey: "nav.history",       icon: History },
+  { to: "/dashboard/market",       tKey: "nav.market",        icon: LandPlot },
+  { to: "/dashboard/cold-storage", tKey: "nav.cold_storage",  icon: Warehouse },
+  { to: "/dashboard/weather",      tKey: "nav.weather",       icon: CloudSun },
+  { to: "/dashboard/schemes",      tKey: "nav.schemes",       icon: LandPlot },
+  { to: "/dashboard/profile",      tKey: "nav.profile",       icon: User },
+  { to: "/dashboard/settings",     tKey: "nav.settings",      icon: Settings },
 ];
 
+
 export function FarmerDashboardLayout() {
+  const { t, i18n } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggle } = useTheme();
   const { user, logout } = useAuth();
@@ -45,7 +50,7 @@ export function FarmerDashboardLayout() {
               isActive ? "bg-primary/10 text-primary" : "text-foreground/75 hover:bg-muted hover:text-foreground",
             )}
           >
-            <it.icon className="h-4 w-4" /> {it.label}
+            <it.icon className="h-4 w-4" /> {t(it.tKey)}
           </NavLink>
         ))}
       </nav>
@@ -54,7 +59,7 @@ export function FarmerDashboardLayout() {
           onClick={() => { logout(); nav("/"); }}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/75 hover:bg-muted"
         >
-          <LogOut className="h-4 w-4" /> Log out
+          <LogOut className="h-4 w-4" /> {t("nav.logout")}
         </button>
       </div>
     </div>
@@ -86,6 +91,18 @@ export function FarmerDashboardLayout() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Select value={i18n.language} onValueChange={(val) => i18n.changeLanguage(val)}>
+              <SelectTrigger className="w-[120px] h-8 text-xs bg-background">
+                <SelectValue placeholder="Language" />
+              </SelectTrigger>
+              <SelectContent>
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <SelectItem key={lang.code} value={lang.code} className="text-xs">
+                    {lang.native}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <Button variant="ghost" size="icon" onClick={toggle} aria-label="Toggle theme">
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>

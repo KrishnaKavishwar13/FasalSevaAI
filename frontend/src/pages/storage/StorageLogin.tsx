@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { Building2, Loader2, ArrowRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,6 +17,27 @@ export function StorageLogin() {
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState(1);
+  const [countdown, setCountdown] = useState(0);
+
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
+
+  const handleResend = async () => {
+    setLoading(true);
+    try {
+      await authService.login(phone);
+      setCountdown(60);
+      toast.success("OTP has been resent via FasalSeva Gateway");
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Failed to resend OTP");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (user?.role === "storage_owner") {
     return <Navigate to="/storage/dashboard" replace />;
@@ -26,11 +47,18 @@ export function StorageLogin() {
     e.preventDefault();
     setLoading(true);
     try {
+      if (!/^\d{10}$/.test(phone)) {
+        toast.error("Enter a valid 10-digit phone number");
+        setLoading(false);
+        return;
+      }
+      localStorage.setItem("fasalseva.pending", JSON.stringify({ role: "storage_owner" }));
       await authService.login(phone);
       setStep(2);
+      setCountdown(60);
       toast.success("OTP sent to your number");
-    } catch {
-      toast.error("Failed to send OTP");
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Failed to send OTP");
     } finally {
       setLoading(false);
     }
@@ -40,13 +68,17 @@ export function StorageLogin() {
     e.preventDefault();
     setLoading(true);
     try {
-      // Mocking the backend user role for testing
-      localStorage.setItem("fasalseva.pending", JSON.stringify({ role: "storage_owner" }));
+      if (otp.length < 6) {
+        toast.error("Enter the 6-digit OTP");
+        setLoading(false);
+        return;
+      }
       const loggedInUser = await authService.verifyOtp(phone, otp, "Storage Admin");
       setUser(loggedInUser);
-      navigate("/storage/dashboard");
-    } catch {
-      toast.error("Invalid OTP");
+      toast.success("Welcome back!");
+      navigate(loggedInUser.hasStorage ? "/storage/dashboard" : "/storage/onboarding");
+    } catch (err: any) {
+      toast.error(err.response?.data?.detail || "Invalid OTP");
     } finally {
       setLoading(false);
     }
@@ -91,6 +123,15 @@ export function StorageLogin() {
                   onChange={e => setOtp(e.target.value)} 
                   required 
                 />
+                <p className="text-xs text-muted-foreground mt-2 text-right">
+                  {countdown > 0 ? (
+                    <span className="text-muted-foreground">Resend OTP in {countdown}s</span>
+                  ) : (
+                    <button type="button" onClick={handleResend} className="text-emerald-600 hover:underline font-medium">
+                      Resend OTP
+                    </button>
+                  )}
+                </p>
               </div>
               <Button type="submit" className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white text-lg" disabled={loading}>
                 {loading ? <Loader2 className="animate-spin" /> : "Verify & Login"}

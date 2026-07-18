@@ -1,4 +1,4 @@
-import type { WeatherReading } from "@/types";
+import type { WeatherReading, RiskLevel } from "@/types";
 
 export const weatherService = {
   async getWeather(location: string = "Indore, MP", lat: number = 22.7196, lng: number = 75.8577): Promise<WeatherReading> {
@@ -11,7 +11,7 @@ export const weatherService = {
       const hum = Math.round(data.current.relative_humidity_2m);
       const rain48 = data.hourly.precipitation.slice(0, 48).reduce((a: number, b: number) => a + b, 0);
 
-      let alert = "Green";
+      let alert: RiskLevel = "Green";
       let summary = "Good conditions for temporary storage.";
       
       if (temp > 35 || hum > 80) {

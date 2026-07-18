@@ -1,6 +1,7 @@
 import os
 import math
 import sqlite3
+import inspect
 import warnings
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,6 +20,9 @@ load_dotenv()
 
 app = FastAPI(title="FasalSeva API")
 
+from auth.routes import auth_router
+app.include_router(auth_router)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -35,9 +39,26 @@ app.add_middleware(
 BASE   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODELS = os.path.join(BASE, 'models')
 
+def patch_xgb(model):
+    try:
+        from xgboost import XGBModel
+        if isinstance(model, XGBModel):
+            for cls in (XGBModel, model.__class__):
+                sig = inspect.signature(cls.__init__)
+                for p in sig.parameters.keys():
+                    if not hasattr(model, p):
+                        setattr(model, p, None)
+            if hasattr(model, "get_booster"):
+                model.get_booster().feature_names = None
+    except Exception:
+        pass
+
 spoilage_regressor  = joblib.load(os.path.join(MODELS, 'spoilage_regressor.pkl'))
+patch_xgb(spoilage_regressor)
 spoilage_classifier = joblib.load(os.path.join(MODELS, 'spoilage_classifier.pkl'))
+patch_xgb(spoilage_classifier)
 price_model         = joblib.load(os.path.join(MODELS, 'price_model_v2.pkl'))
+patch_xgb(price_model)
 risk_decode = {0: 'Red', 1: 'Green', 2: 'Yellow'}
 le_crop_v2          = joblib.load(os.path.join(MODELS, 'le_crop_v2.pkl'))
 le_state_v2         = joblib.load(os.path.join(MODELS, 'le_state_v2.pkl'))
@@ -171,7 +192,8 @@ def suggest_schemes(risk_level: str, days_remaining: float,
     return result[:4]
 
 # ─── Task 2: SQLite Cold Storage DB ────────────────────────────
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cold_storage.db')
+import tempfile
+DB_PATH = os.path.join(tempfile.gettempdir(), 'cold_storage.db')
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
@@ -593,7 +615,7 @@ async def analyze(data: AnalyzeInput):
     price_15 = predict_price_safe(data.crop, data.state, data.current_price, month, week, 15)
 
     # STEP 3 — SQLite only (NO OSM call — too slow)
-    conn = sqlite3.connect('cold_storage.db')
+    conn = sqlite3.connect(DB_PATH)
     c    = conn.cursor()
     c.execute('SELECT * FROM cold_storages WHERE verified = 1')
     rows = c.fetchall()

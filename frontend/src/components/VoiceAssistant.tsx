@@ -5,14 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { voiceService } from "@/services/voiceService";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import { SUPPORTED_LANGUAGES } from "@/config/languages";
 
 interface Msg { role: "user" | "assistant"; text: string; }
 const SUGGESTIONS = ["Tamatar kitne din store kar sakte hain?", "Aaj ka mandi bhav?", "Nearest cold storage?"];
 
 export function VoiceAssistant() {
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([
-    { role: "assistant", text: "Namaste! Ask me about shelf life, mandi prices, storage or weather." },
+    { role: "assistant", text: t("chatbot.greeting", "Namaste! Ask me about shelf life, mandi prices, storage or weather.") },
   ]);
   const [input, setInput] = useState("");
   const [listening, setListening] = useState(false);
@@ -23,10 +26,12 @@ export function VoiceAssistant() {
     setMsgs((m) => [...m, { role: "user", text: q }]);
     setInput("");
     setThinking(true);
-    const reply = await voiceService.askAssistant(q);
+    const reply = await voiceService.askAssistant(q, i18n.language);
     setThinking(false);
     setMsgs((m) => [...m, { role: "assistant", text: reply }]);
   }
+
+  const currentLang = SUPPORTED_LANGUAGES.find(l => l.code === i18n.language) || SUPPORTED_LANGUAGES[0];
 
   return (
     <>
@@ -53,11 +58,11 @@ export function VoiceAssistant() {
                   <Sparkles className="h-4 w-4 text-primary-foreground" />
                 </span>
                 <div>
-                  <p className="text-sm font-semibold">FasalSeva Assistant</p>
-                  <p className="text-xs text-muted-foreground">Hindi &amp; English</p>
+                  <p className="text-sm font-semibold">{t("chatbot.title", "FasalSeva Assistant")}</p>
+                  <p className="text-xs text-muted-foreground">{currentLang.native}</p>
                 </div>
               </div>
-              <button onClick={() => setOpen(false)} className="rounded-md p-1 hover:bg-muted"><X className="h-4 w-4" /></button>
+              <button onClick={() => setOpen(false)} className="rounded-md p-1 hover:bg-muted" aria-label={t("chatbot.close", "Close")}><X className="h-4 w-4" /></button>
             </div>
             <div className="flex-1 space-y-3 overflow-y-auto p-4">
               {msgs.map((m, i) => (
@@ -69,7 +74,7 @@ export function VoiceAssistant() {
                 </div>
               ))}
               {thinking && (
-                <div className="flex justify-start"><div className="rounded-2xl bg-muted px-3 py-2 text-sm text-muted-foreground">Thinking…</div></div>
+                <div className="flex justify-start"><div className="rounded-2xl bg-muted px-3 py-2 text-sm text-muted-foreground">{t("chatbot.thinking", "Thinking…")}</div></div>
               )}
             </div>
             <div className="border-t border-border/60 p-3">
@@ -87,7 +92,7 @@ export function VoiceAssistant() {
                   onClick={() => setListening((l) => !l)} aria-label="Mic">
                   <Mic className="h-4 w-4" />
                 </Button>
-                <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask anything…" className="h-9" />
+                <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder={t("chatbot.placeholder", "Ask anything…")} className="h-9" />
                 <Button type="submit" size="icon" className="h-9 w-9 gradient-primary text-primary-foreground"><Send className="h-4 w-4" /></Button>
               </form>
             </div>

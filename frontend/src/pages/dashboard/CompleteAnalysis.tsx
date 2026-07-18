@@ -13,8 +13,10 @@ import { motion } from "framer-motion";
 import { CROP_BASE_PRICE_PER_QUINTAL } from "@/services/marketService";
 import type { CropName } from "@/types";
 import { analysisService } from "@/services/analysisService";
+import { useTranslation } from "react-i18next";
 
 export function CompleteAnalysis() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -49,11 +51,11 @@ export function CompleteAnalysis() {
           temp: Math.round((w.current.temperature_2m + 5) * 10) / 10 + "",
           humidity: Math.min(100, Math.round(w.current.relative_humidity_2m + 8)) + ""
         }));
-        toast.success("GPS and Weather data loaded!");
+        toast.success(t("analysis.gps_weather_loaded", "GPS and Weather data loaded!"));
       } catch {
         // Fallbacks
         setForm(f => ({ ...f, temp: "33", humidity: "78" }));
-        toast.error("Could not fetch GPS/Weather. Using default values.");
+        toast.error(t("analysis.gps_weather_failed", "Could not fetch GPS/Weather. Using default values."));
       } finally {
         setWeatherLoading(false);
       }
@@ -70,22 +72,22 @@ export function CompleteAnalysis() {
           if (r.data.found) {
             setForm(f => ({ ...f, price: r.data.current_price.toString() }));
             if (r.data.is_fallback) {
-                setPriceNote("⚠️ Live price unavailable — using seasonal average. Please verify manually.");
+                setPriceNote(t("analysis.price_unavailable_seasonal", "⚠️ Live price unavailable — using seasonal average. Please verify manually."));
             } else {
-                setPriceNote(`✅ Live from Agmarknet — ${r.data.market} (${r.data.date})`);
+                setPriceNote(t("analysis.live_from_agmarknet_market", "✅ Live from Agmarknet — {{market}} ({{date}})", { market: r.data.market, date: r.data.date }));
             }
           } else {
             const fallback = CROP_BASE_PRICE_PER_QUINTAL[form.crop as CropName] || 1500;
             setForm(f => ({ ...f, price: fallback.toString() }));
-            setPriceNote("⚠️ Live price unavailable — using seasonal average. Please verify manually.");
-            toast.info(`Using approximate market price for ${form.crop}`);
+            setPriceNote(t("analysis.price_unavailable_seasonal", "⚠️ Live price unavailable — using seasonal average. Please verify manually."));
+            toast.info(t("analysis.approx_market_price", "Using approximate market price for {{crop}}", { crop: form.crop }));
           }
         })
         .catch(() => {
           const fallback = CROP_BASE_PRICE_PER_QUINTAL[form.crop as CropName] || 1500;
           setForm(f => ({ ...f, price: fallback.toString() }));
-          setPriceNote("⚠️ Live price unavailable — using seasonal average. Please verify manually.");
-          toast.error("Could not fetch live price. Using approximate price.");
+          setPriceNote(t("analysis.price_unavailable_seasonal", "⚠️ Live price unavailable — using seasonal average. Please verify manually."));
+          toast.error(t("analysis.price_fetch_failed", "Could not fetch live price. Using approximate price."));
         })
         .finally(() => setPriceLoading(false));
     }
@@ -94,7 +96,7 @@ export function CompleteAnalysis() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.price || !form.temp || !form.humidity) {
-      return toast.error("Please fill in all auto-fetched fields if they failed to load.");
+      return toast.error(t("analysis.fill_auto_fields", "Please fill in all auto-fetched fields if they failed to load."));
     }
 
     setLoading(true);
@@ -118,7 +120,7 @@ export function CompleteAnalysis() {
       navigate(`/dashboard/result/${res.id}`);
     } catch (err: any) {
       console.error(err);
-      toast.error("Analysis failed. " + (err.response?.data || err.message));
+      toast.error(t("analysis.analysis_failed", "Analysis failed. ") + (err.response?.data || err.message));
     } finally {
       setLoading(false);
     }
@@ -129,10 +131,10 @@ export function CompleteAnalysis() {
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <Button variant="ghost" size="sm" className="mb-3 -ml-3" onClick={() => navigate(-1)}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back
+            <ArrowLeft className="mr-2 h-4 w-4" /> {t("analysis.back", "Back")}
           </Button>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2"><Target className="text-amber-500 h-8 w-8" /> Complete Analysis</h1>
-          <p className="mt-1 text-sm text-muted-foreground">End-to-end post harvest decision engine.</p>
+          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2"><Target className="text-amber-500 h-8 w-8" /> {t("analysis.complete_title", "Complete Analysis")}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">{t("analysis.complete_desc_engine", "End-to-end post harvest decision engine.")}</p>
         </div>
       </motion.div>
 
@@ -141,9 +143,9 @@ export function CompleteAnalysis() {
           
           <div className="grid gap-6 md:grid-cols-2">
             <div>
-              <Label>Crop</Label>
+              <Label>{t("analysis.crop_label", "Crop")}</Label>
               <Select value={form.crop} onValueChange={(value) => setForm(f => ({ ...f, crop: value }))}>
-                <SelectTrigger className="mt-1"><SelectValue placeholder="Select crop" /></SelectTrigger>
+                <SelectTrigger className="mt-1"><SelectValue placeholder={t("analysis.select_crop", "Select crop")} /></SelectTrigger>
                 <SelectContent>
                   {CROPS.map((crop) => (
                     <SelectItem key={crop.name} value={crop.name}>{crop.emoji} {crop.name}</SelectItem>
@@ -152,16 +154,16 @@ export function CompleteAnalysis() {
               </Select>
             </div>
             <div>
-              <Label>Quantity (kg)</Label>
+              <Label>{t("analysis.quantity_label", "Quantity (kg)")}</Label>
               <Input className="mt-1" type="number" min="1" value={form.quantity} onChange={(e) => setForm(f => ({ ...f, quantity: e.target.value }))} required />
             </div>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
             <div>
-              <Label>State</Label>
+              <Label>{t("analysis.state_label", "State")}</Label>
               <Select value={form.state} onValueChange={(value) => setForm(f => ({ ...f, state: value }))}>
-                <SelectTrigger className="mt-1"><SelectValue placeholder="Select state" /></SelectTrigger>
+                <SelectTrigger className="mt-1"><SelectValue placeholder={t("analysis.select_state", "Select state")} /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Madhya Pradesh">Madhya Pradesh</SelectItem>
                   <SelectItem value="Maharashtra">Maharashtra</SelectItem>
@@ -171,37 +173,37 @@ export function CompleteAnalysis() {
               </Select>
             </div>
             <div>
-              <Label>District</Label>
+              <Label>{t("analysis.district_label", "District")}</Label>
               <Input className="mt-1" placeholder="e.g. Indore" value={form.district} onChange={(e) => setForm(f => ({ ...f, district: e.target.value }))} required />
             </div>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
             <div>
-              <Label>Days stored since harvest</Label>
+              <Label>{t("analysis.days_stored_label", "Days stored since harvest")}</Label>
               <Input className="mt-1" type="number" min="0" value={form.days_stored} onChange={(e) => setForm(f => ({ ...f, days_stored: e.target.value }))} required />
             </div>
             
             <div className="relative">
-              <Label>Today's Price (₹/quintal)</Label>
+              <Label>{t("analysis.today_price_label", "Today's Price (₹/quintal)")}</Label>
               <Input className="mt-1" type="number" value={form.price} onChange={(e) => setForm(f => ({ ...f, price: e.target.value }))} required />
               {priceLoading && <Loader2 className="absolute right-3 top-9 h-4 w-4 animate-spin text-muted-foreground" />}
               <p className={`text-xs mt-1 ${priceNote.includes('⚠️') ? 'text-amber-600' : 'text-green-600'}`}>{priceNote}</p>
             </div>
 
             <div className="relative">
-              <Label>Storage Temp (°C)</Label>
+              <Label>{t("analysis.storage_temp_label", "Storage Temp (°C)")}</Label>
               <div className="relative">
                 <Thermometer className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground" />
                 <Input className="mt-1 pl-9" type="number" step="0.1" value={form.temp} onChange={(e) => setForm(f => ({ ...f, temp: e.target.value }))} required />
                 {weatherLoading && <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin text-muted-foreground" />}
               </div>
-              <p className="text-xs text-amber-600 mt-1 flex items-center gap-1"><MapPin className="h-3 w-3" /> Auto from GPS</p>
+              <p className="text-xs text-amber-600 mt-1 flex items-center gap-1"><MapPin className="h-3 w-3" /> {t("analysis.auto_from_gps", "Auto from GPS")}</p>
             </div>
           </div>
 
           <Button type="submit" className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white text-lg" disabled={loading || weatherLoading || priceLoading}>
-            {loading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Analyzing...</> : "Run Complete AI Analysis"}
+            {loading ? <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> {t("analysis.analyzing", "Analyzing...")}</> : t("analysis.run_complete_analysis", "Run Complete AI Analysis")}
           </Button>
 
         </form>

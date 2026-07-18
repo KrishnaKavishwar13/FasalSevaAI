@@ -7,8 +7,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { RiskBadge } from "@/components/RiskBadge";
 import { apiClient } from "@/api/client";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export function Weather() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [weather, setWeather] = useState<any>(null);
@@ -65,8 +67,8 @@ export function Weather() {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Weather & Storage Conditions</h1>
-        <p className="mt-1 text-sm text-muted-foreground flex items-center gap-1"><Navigation className="h-4 w-4" /> Live from GPS coordinates</p>
+        <h1 className="text-3xl font-bold tracking-tight">{t("weather.title", "Weather & Storage Conditions")}</h1>
+        <p className="mt-1 text-sm text-muted-foreground flex items-center gap-1"><Navigation className="h-4 w-4" /> {t("weather.subtitle", "Live from GPS coordinates")}</p>
       </div>
 
       {loading ? (
@@ -80,18 +82,18 @@ export function Weather() {
           {/* Outdoor Weather */}
           <Card className="p-6 relative overflow-hidden bg-sky-50 dark:bg-sky-950/20 border-sky-200 dark:border-sky-900/30">
             <div className="absolute top-0 right-0 w-32 h-32 bg-sky-200/50 dark:bg-sky-900/50 rounded-bl-full blur-2xl" />
-            <h2 className="text-xl font-bold flex items-center gap-2 text-sky-900 dark:text-sky-300"><CloudRain className="h-6 w-6" /> Outdoor Weather</h2>
-            <p className="text-sm text-sky-700/80 dark:text-sky-400/80 mb-6">Current conditions at your farm</p>
+            <h2 className="text-xl font-bold flex items-center gap-2 text-sky-900 dark:text-sky-300"><CloudRain className="h-6 w-6" /> {t("weather.outdoor", "Outdoor Weather")}</h2>
+            <p className="text-sm text-sky-700/80 dark:text-sky-400/80 mb-6">{t("weather.outdoor_desc", "Current conditions at your farm")}</p>
             
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white/60 dark:bg-slate-900/60 p-4 rounded-2xl flex flex-col items-center justify-center border border-sky-100 dark:border-sky-800">
                 <Thermometer className="h-6 w-6 text-sky-600 dark:text-sky-400 mb-2" />
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Temp</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("weather.temp", "Temp")}</p>
                 <p className="text-2xl font-bold text-sky-950 dark:text-sky-100">{weather.temp}°C</p>
               </div>
               <div className="bg-white/60 dark:bg-slate-900/60 p-4 rounded-2xl flex flex-col items-center justify-center border border-sky-100 dark:border-sky-800">
                 <Droplets className="h-6 w-6 text-sky-600 dark:text-sky-400 mb-2" />
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Humidity</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("weather.humidity", "Humidity")}</p>
                 <p className="text-2xl font-bold text-sky-950 dark:text-sky-100">{weather.hum}%</p>
               </div>
             </div>
@@ -100,18 +102,18 @@ export function Weather() {
           {/* Indoor Storage */}
           <Card className="p-6 relative overflow-hidden bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/30">
             <div className="absolute top-0 right-0 w-32 h-32 bg-amber-200/50 dark:bg-amber-900/50 rounded-bl-full blur-2xl" />
-            <h2 className="text-xl font-bold flex items-center gap-2 text-amber-900 dark:text-amber-400"><Home className="h-6 w-6" /> Storage Conditions</h2>
-            <p className="text-sm text-amber-700/80 dark:text-amber-400/80 mb-6">Estimated indoor ambient conditions</p>
+            <h2 className="text-xl font-bold flex items-center gap-2 text-amber-900 dark:text-amber-400"><Home className="h-6 w-6" /> {t("weather.storage", "Storage Conditions")}</h2>
+            <p className="text-sm text-amber-700/80 dark:text-amber-400/80 mb-6">{t("weather.storage_desc", "Estimated indoor ambient conditions")}</p>
             
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white/60 dark:bg-slate-900/60 p-4 rounded-2xl flex flex-col items-center justify-center border border-amber-100 dark:border-amber-800">
                 <Thermometer className="h-6 w-6 text-amber-600 dark:text-amber-400 mb-2" />
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Temp (+5°C)</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("weather.temp_plus_5", "Temp (+5°C)")}</p>
                 <p className="text-2xl font-bold text-amber-950 dark:text-amber-100">{weather.storageTemp}°C</p>
               </div>
               <div className="bg-white/60 dark:bg-slate-900/60 p-4 rounded-2xl flex flex-col items-center justify-center border border-amber-100 dark:border-amber-800">
                 <Droplets className="h-6 w-6 text-amber-600 dark:text-amber-400 mb-2" />
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Humidity (+8%)</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t("weather.humidity_plus_8", "Humidity (+8%)")}</p>
                 <p className="text-2xl font-bold text-amber-950 dark:text-amber-100">{weather.storageHum}%</p>
               </div>
             </div>
@@ -129,25 +131,25 @@ export function Weather() {
                 <Target className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div>
-                <h3 className="text-xl font-bold">How this affects your {user.mainCrop}</h3>
-                <p className="text-sm text-muted-foreground">Based on the current storage conditions calculated above.</p>
+                <h3 className="text-xl font-bold">{t("weather.how_affects", "How this affects your {{crop}}", { crop: user.mainCrop })}</h3>
+                <p className="text-sm text-muted-foreground">{t("weather.affects_desc", "Based on the current storage conditions calculated above.")}</p>
               </div>
             </div>
 
             {impact ? (
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="p-4 rounded-2xl bg-muted/40 flex items-center justify-between">
-                  <span className="text-sm font-medium">Expected Safe Shelf Life</span>
-                  <span className="text-xl font-bold">{impact.days_remaining} days</span>
+                  <span className="text-sm font-medium">{t("weather.safe_shelf_life", "Expected Safe Shelf Life")}</span>
+                  <span className="text-xl font-bold">{impact.days_remaining} {t("result.days", "days")}</span>
                 </div>
                 <div className="p-4 rounded-2xl bg-muted/40 flex items-center justify-between">
-                  <span className="text-sm font-medium">Current Spoilage Risk</span>
+                  <span className="text-sm font-medium">{t("weather.spoilage_risk", "Current Spoilage Risk")}</span>
                   <RiskBadge risk={impact.risk_level} />
                 </div>
               </div>
             ) : (
               <div className="flex items-center gap-2 text-sm text-muted-foreground p-4 bg-muted/30 rounded-2xl">
-                <ShieldAlert className="h-4 w-4" /> Spoilage model analysis failed to load.
+                <ShieldAlert className="h-4 w-4" /> {t("weather.analysis_failed", "Spoilage model analysis failed to load.")}
               </div>
             )}
           </Card>

@@ -13,8 +13,10 @@ import { ArrowDownRight, ArrowUpRight, ArrowRight, Loader2, MapPin } from "lucid
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
 import { apiClient } from "@/api/client";
+import { useTranslation } from "react-i18next";
 
 export function Market() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [crop, setCrop] = useState<CropName>((user?.mainCrop as CropName) || "Tomato");
   const [state, setState] = useState(user?.state || "Madhya Pradesh");
@@ -32,9 +34,9 @@ export function Market() {
           if (r.data.found) {
             setPrice(r.data.current_price);
             if (r.data.is_fallback) {
-              setPriceNote("⚠️ Live price unavailable — using seasonal average. Please verify manually.");
+              setPriceNote(t("market.price_fallback", "⚠️ Live price unavailable — using seasonal average. Please verify manually."));
             } else {
-              setPriceNote(`✅ Live from Agmarknet — ${r.data.market} (${r.data.date})`);
+              setPriceNote(t("market.live_price", "✅ Live from Agmarknet — {{market}} ({{date}})", { market: r.data.market, date: r.data.date }));
             }
           }
         })
@@ -45,7 +47,7 @@ export function Market() {
   const { data, isFetching, refetch } = useQuery({
     queryKey: ["market", crop, state, district, price],
     queryFn: () => marketService.getPriceForecast({
-      crop, state, district, current_price: price,
+      crop, state, current_price: price,
       month: new Date().getMonth() + 1, week: Math.ceil((new Date().getDate() + 1) / 7),
     }),
   });
@@ -57,69 +59,69 @@ export function Market() {
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Market intelligence</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Live Agmarknet prices + 15-day AI mandi price forecast.</p>
+        <h1 className="text-3xl font-bold tracking-tight">{t("market.title", "Market intelligence")}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t("market.subtitle", "Live Agmarknet prices + 15-day AI mandi price forecast.")}</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
         <Card className="p-6 md:col-span-2">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div><Label>Crop</Label>
+            <div><Label>{t("analysis.crop_label", "Crop")}</Label>
               <Select value={crop} onValueChange={(v) => setCrop(v as CropName)}>
                 <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                 <SelectContent>{CROPS.filter(c => c.priceModel).map(c => <SelectItem key={c.name} value={c.name}>{c.emoji} {c.name}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div><Label>State</Label>
+            <div><Label>{t("analysis.state_label", "State")}</Label>
               <Select value={state} onValueChange={(v) => { setState(v); setDistrict(STATE_DISTRICTS[v][0]); }}>
                 <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                 <SelectContent>{STATES.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div><Label>District</Label>
+            <div><Label>{t("market.district", "District")}</Label>
               <Select value={district} onValueChange={setDistrict}>
                 <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                 <SelectContent>{STATE_DISTRICTS[state].map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div className="relative"><Label>Today's price (₹/qtl)</Label>
+            <div className="relative"><Label>{t("market.todays_price", "Today's price (₹/qtl)")}</Label>
               <Input type="number" className="mt-1" value={price} onChange={(e) => setPrice(Number(e.target.value))} />
               {priceLoading && <Loader2 className="absolute right-2 top-9 h-4 w-4 animate-spin text-muted-foreground" />}
             </div>
           </div>
           <Button className="mt-6 w-full sm:w-auto gradient-primary text-primary-foreground" onClick={() => refetch()} disabled={isFetching || priceLoading}>
-            {isFetching ? "Loading…" : "Update forecast"}
+            {isFetching ? t("market.loading", "Loading…") : t("market.update_forecast", "Update forecast")}
           </Button>
         </Card>
 
         {/* Large Prominent Today's Price Card */}
         <Card className="p-6 bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-900 flex flex-col justify-center">
-          <p className="text-sm font-semibold text-green-700 dark:text-green-400 flex items-center gap-2"><MapPin className="h-4 w-4" /> {state} Mandi</p>
-          <p className="text-4xl font-bold text-green-700 dark:text-green-300 mt-2">₹{price}<span className="text-xl text-green-600/70">/qtl</span></p>
+          <p className="text-sm font-semibold text-green-700 dark:text-green-400 flex items-center gap-2"><MapPin className="h-4 w-4" /> {t("market.mandi", "{{state}} Mandi", { state })}</p>
+          <p className="text-4xl font-bold text-green-700 dark:text-green-300 mt-2">₹{price}<span className="text-xl text-green-600/70">{t("market.per_qtl", "/qtl")}</span></p>
           <p className={`text-xs mt-2 ${priceNote.includes('⚠️') ? 'text-amber-600' : 'text-green-600'}`}>{priceNote}</p>
           <div className="mt-4 flex gap-4 text-sm text-green-700 dark:text-green-400">
-            <div><span className="opacity-70">Min:</span> ₹{price - 150}</div>
-            <div><span className="opacity-70">Max:</span> ₹{price + 200}</div>
+            <div><span className="opacity-70">{t("market.min", "Min:")}</span> ₹{price - 150}</div>
+            <div><span className="opacity-70">{t("market.max", "Max:")}</span> ₹{price + 200}</div>
           </div>
         </Card>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         {[
-          { label: "Day 5 Forecast", value: data?.daily[5]?.price },
-          { label: "Day 8 Forecast", value: data?.daily[8]?.price },
-          { label: "Day 15 Forecast", value: data?.price_after_15_days },
+          { label: t("market.day_5", "Day 5 Forecast"), value: data?.daily[5]?.price },
+          { label: t("market.day_8", "Day 8 Forecast"), value: data?.daily[8]?.price },
+          { label: t("market.day_15", "Day 15 Forecast"), value: data?.price_after_15_days },
         ].map((s) => (
           <Card key={s.label} className="p-5">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">{s.label}</p>
-            <p className="mt-1 text-2xl font-bold">₹{s.value ?? "—"}<span className="text-sm font-medium text-muted-foreground">/qtl</span></p>
+            <p className="mt-1 text-2xl font-bold">₹{s.value ?? "—"}<span className="text-sm font-medium text-muted-foreground">{t("market.per_qtl", "/qtl")}</span></p>
           </Card>
         ))}
       </div>
 
       <Card className="p-6">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">15-Day Price Forecast</h3>
+          <h3 className="text-lg font-semibold">{t("market.chart_title", "15-Day Price Forecast")}</h3>
           <span className={cn("flex items-center gap-1 text-sm font-semibold",
             trend === "Increasing" ? "text-green-600" : trend === "Decreasing" ? "text-red-600" : "text-muted-foreground"
           )}><TrendIcon className="h-4 w-4" /> {trend}</span>
@@ -130,7 +132,7 @@ export function Market() {
               <defs><linearGradient id="mc" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.45} /><stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} /></linearGradient></defs>
               <XAxis dataKey="day" tickFormatter={(v) => `D${v}`} axisLine={false} tickLine={false} />
               <YAxis width={60} axisLine={false} tickLine={false} tickFormatter={(v) => `₹${v}`} />
-              <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid var(--color-border)" }} formatter={(v: number) => [`₹${v}/qtl`, "Price"]} />
+              <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid var(--color-border)" }} formatter={(v: number) => [`₹${v}${t("market.per_qtl", "/qtl")}`, t("market.price", "Price")]} />
               <Area type="monotone" dataKey="price" stroke="var(--color-primary)" strokeWidth={2.5} fill="url(#mc)" />
             </AreaChart>
           </ResponsiveContainer>
