@@ -6,7 +6,7 @@ export const voiceService = {
       const res = await axios.post(
         "https://saksham2026.app.n8n.cloud/webhook/d82608f3-923a-4460-a935-c44c4c6b3fed/chat",
         { chatInput: query, language: language || "en" },
-        { headers: { "Content-Type": "application/json" } }
+        { headers: { "Content-Type": "application/json" } },
       );
       return res.data?.output || "I'm sorry, I couldn't process your request.";
     } catch (error) {

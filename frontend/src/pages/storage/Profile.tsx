@@ -8,16 +8,32 @@ export function StorageProfile() {
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Manage your storage owner profile and account details.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Manage your storage owner profile and account details.
+        </p>
       </div>
       <Card className="p-6">
         <div className="grid gap-4 md:grid-cols-2">
-          <div><Label>Name</Label><Input className="mt-1" placeholder="Owner name" /></div>
-          <div><Label>Phone</Label><Input className="mt-1" placeholder="Phone number" /></div>
-          <div><Label>Email</Label><Input className="mt-1" placeholder="Email" /></div>
-          <div><Label>Company</Label><Input className="mt-1" placeholder="Storage company" /></div>
+          <div>
+            <Label>Name</Label>
+            <Input className="mt-1" placeholder="Owner name" />
+          </div>
+          <div>
+            <Label>Phone</Label>
+            <Input className="mt-1" placeholder="Phone number" />
+          </div>
+          <div>
+            <Label>Email</Label>
+            <Input className="mt-1" placeholder="Email" />
+          </div>
+          <div>
+            <Label>Company</Label>
+            <Input className="mt-1" placeholder="Storage company" />
+          </div>
         </div>
-        <div className="mt-6"><Button className="gradient-primary text-primary-foreground">Save changes</Button></div>
+        <div className="mt-6">
+          <Button className="gradient-primary text-primary-foreground">Save changes</Button>
+        </div>
       </Card>
     </div>
   );

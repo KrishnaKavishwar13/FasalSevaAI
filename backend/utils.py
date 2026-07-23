@@ -1,5 +1,6 @@
 import math
 import requests
+import logging
 from constants import GOVT_SCHEMES
 
 def haversine(lat1, lng1, lat2, lng2):
@@ -53,7 +54,7 @@ def search_osm_cold_storage(lat: float, lng: float, radius: int = 50000):
             })
         return sorted(results, key=lambda x: x["distance_km"])[:4]
     except Exception as e:
-        print(f"OSM cold storage error: {e}")
+        logging.error(f"OSM cold storage error: {e}")
         return []
 
 def search_osm_mandi(lat: float, lng: float):
@@ -87,7 +88,7 @@ def search_osm_mandi(lat: float, lng: float):
             })
         return sorted(results, key=lambda x: x["distance_km"])[:4]
     except Exception as e:
-        print(f"OSM mandi error: {e}")
+        logging.error(f"OSM mandi error: {e}")
         return []
 
 def suggest_schemes(risk_level: str, days_remaining: float,

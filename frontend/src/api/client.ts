@@ -9,5 +9,5 @@ export const apiClient = axios.create({
 });
 
 // Small helper for mock services so loading states are actually visible in the UI.
-export const mockDelay = <T,>(data: T, ms = 600): Promise<T> =>
+export const mockDelay = <T>(data: T, ms = 600): Promise<T> =>
   new Promise((r) => setTimeout(() => r(data), ms));

@@ -36,7 +36,8 @@ export function Header() {
             <Leaf className="h-5 w-5 text-primary-foreground" />
           </span>
           <span className="text-lg font-bold tracking-tight">
-            Fasal<span className="text-gradient-primary">Seva</span> <span className="text-xs font-semibold text-muted-foreground">AI</span>
+            Fasal<span className="text-gradient-primary">Seva</span>{" "}
+            <span className="text-xs font-semibold text-muted-foreground">AI</span>
           </span>
         </Link>
 
@@ -63,11 +64,17 @@ export function Header() {
               );
             }
             return (
-              <NavLink key={n.to} to={n.to} className={({ isActive }) =>
-                `rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted ${
-                  isActive ? "text-primary" : "text-foreground/80"
-                }`
-              }>{n.label}</NavLink>
+              <NavLink
+                key={n.to}
+                to={n.to}
+                className={({ isActive }) =>
+                  `rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted ${
+                    isActive ? "text-primary" : "text-foreground/80"
+                  }`
+                }
+              >
+                {n.label}
+              </NavLink>
             );
           })}
         </nav>
@@ -75,7 +82,12 @@ export function Header() {
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="hidden sm:inline-flex" aria-label="Language">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hidden sm:inline-flex"
+                aria-label="Language"
+              >
                 <Languages className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -93,10 +105,20 @@ export function Header() {
           <Button asChild variant="outline" size="sm" className="hidden md:inline-flex">
             <Link to="/login">{t("auth.login", "Login")}</Link>
           </Button>
-          <Button asChild size="sm" className="hidden md:inline-flex gradient-primary text-primary-foreground">
+          <Button
+            asChild
+            size="sm"
+            className="hidden md:inline-flex gradient-primary text-primary-foreground"
+          >
             <Link to="/signup">{t("auth.get_started", "Get started")}</Link>
           </Button>
-          <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setOpen((o) => !o)} aria-label="Menu">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setOpen((o) => !o)}
+            aria-label="Menu"
+          >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
@@ -105,7 +127,9 @@ export function Header() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
             className="lg:hidden overflow-hidden border-t border-border/60 bg-background"
           >
             <div className="flex flex-col gap-1 px-4 py-3">
@@ -132,13 +156,23 @@ export function Header() {
                   );
                 }
                 return (
-                  <Link key={n.to} to={n.to} onClick={() => setOpen(false)}
-                    className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted">{n.label}</Link>
+                  <Link
+                    key={n.to}
+                    to={n.to}
+                    onClick={() => setOpen(false)}
+                    className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
+                  >
+                    {n.label}
+                  </Link>
                 );
               })}
               <div className="mt-2 flex gap-2">
-                <Button asChild variant="outline" className="flex-1"><Link to="/login">{t("auth.login", "Login")}</Link></Button>
-                <Button asChild className="flex-1 gradient-primary text-primary-foreground"><Link to="/signup">{t("auth.get_started", "Get started")}</Link></Button>
+                <Button asChild variant="outline" className="flex-1">
+                  <Link to="/login">{t("auth.login", "Login")}</Link>
+                </Button>
+                <Button asChild className="flex-1 gradient-primary text-primary-foreground">
+                  <Link to="/signup">{t("auth.get_started", "Get started")}</Link>
+                </Button>
               </div>
             </div>
           </motion.div>

@@ -86,13 +86,21 @@ export function StorageLogin() {
 
   return (
     <div className="min-h-screen bg-emerald-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md"
+      >
         <div className="text-center mb-8">
           <div className="inline-grid h-16 w-16 place-items-center rounded-2xl bg-emerald-600 shadow-lg mb-4">
             <Building2 className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-emerald-900 dark:text-emerald-400">Storage Portal</h1>
-          <p className="text-emerald-700/80 dark:text-emerald-400/80 mt-2">Manage your cold storage business</p>
+          <h1 className="text-3xl font-bold text-emerald-900 dark:text-emerald-400">
+            Storage Portal
+          </h1>
+          <p className="text-emerald-700/80 dark:text-emerald-400/80 mt-2">
+            Manage your cold storage business
+          </p>
         </div>
 
         <Card className="p-6 sm:p-8 shadow-xl">
@@ -100,40 +108,58 @@ export function StorageLogin() {
             <form onSubmit={handleSendOtp} className="space-y-6">
               <div>
                 <Label>Mobile Number</Label>
-                <Input 
-                  className="mt-2 h-12 text-lg" 
-                  placeholder="Enter your registered number" 
-                  value={phone} 
-                  onChange={e => setPhone(e.target.value)} 
-                  required 
+                <Input
+                  className="mt-2 h-12 text-lg"
+                  placeholder="Enter your registered number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
                 />
               </div>
-              <Button type="submit" className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white text-lg" disabled={loading}>
-                {loading ? <Loader2 className="animate-spin" /> : <>Send OTP <ArrowRight className="ml-2 h-5 w-5" /></>}
+              <Button
+                type="submit"
+                className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white text-lg"
+                disabled={loading}
+              >
+                {loading ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <>
+                    Send OTP <ArrowRight className="ml-2 h-5 w-5" />
+                  </>
+                )}
               </Button>
             </form>
           ) : (
             <form onSubmit={handleVerify} className="space-y-6">
               <div>
                 <Label>Enter OTP</Label>
-                <Input 
-                  className="mt-2 h-12 text-lg text-center tracking-widest" 
-                  placeholder="• • • • • •" 
-                  value={otp} 
-                  onChange={e => setOtp(e.target.value)} 
-                  required 
+                <Input
+                  className="mt-2 h-12 text-lg text-center tracking-widest"
+                  placeholder="• • • • • •"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  required
                 />
                 <p className="text-xs text-muted-foreground mt-2 text-right">
                   {countdown > 0 ? (
                     <span className="text-muted-foreground">Resend OTP in {countdown}s</span>
                   ) : (
-                    <button type="button" onClick={handleResend} className="text-emerald-600 hover:underline font-medium">
+                    <button
+                      type="button"
+                      onClick={handleResend}
+                      className="text-emerald-600 hover:underline font-medium"
+                    >
                       Resend OTP
                     </button>
                   )}
                 </p>
               </div>
-              <Button type="submit" className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white text-lg" disabled={loading}>
+              <Button
+                type="submit"
+                className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white text-lg"
+                disabled={loading}
+              >
                 {loading ? <Loader2 className="animate-spin" /> : "Verify & Login"}
               </Button>
             </form>

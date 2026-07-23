@@ -32,7 +32,7 @@ function mapBackendToFacility(s: BackendStorage, index: number): StorageFacility
     owner_name: s.owner_name,
     address: s.address,
     phone: s.phone,
-    lat: 22.7196,   // approx — backend doesn't return lat/lng in the result list
+    lat: 22.7196, // approx — backend doesn't return lat/lng in the result list
     lng: 75.8577,
     distance_km: s.distance_km,
     capacity_tons: 500,
@@ -40,7 +40,15 @@ function mapBackendToFacility(s: BackendStorage, index: number): StorageFacility
     occupied_tons: 0,
     cost_per_kg_day: s.price_per_crate_day != null ? s.price_per_crate_day / 50 : 0.2,
     cost_per_crate_day: s.price_per_crate_day ?? undefined,
-    compatible_crops: ["Tomato", "Potato", "Onion", "Cauliflower", "Cabbage", "Carrot", "Brinjal"] as CropName[],
+    compatible_crops: [
+      "Tomato",
+      "Potato",
+      "Onion",
+      "Cauliflower",
+      "Cabbage",
+      "Carrot",
+      "Brinjal",
+    ] as CropName[],
     rating: s.verified ? 4.7 : 4.2,
     image: coldStorageImg,
     amenities: s.verified ? ["24/7 backup", "CCTV", "Verified Partner"] : ["Call to confirm"],
@@ -65,7 +73,10 @@ export function setFarmerLocation(lat: number, lng: number) {
 let BOOKINGS: Booking[] = [];
 
 export const storageService = {
-  async getFacilities(filters?: { crop?: CropName; maxDistance?: number }): Promise<StorageFacility[]> {
+  async getFacilities(filters?: {
+    crop?: CropName;
+    maxDistance?: number;
+  }): Promise<StorageFacility[]> {
     try {
       const res = await apiClient.get(`/storage?lat=${_farmerLat}&lng=${_farmerLng}`);
       const results: BackendStorage[] = res.data?.results ?? [];
@@ -93,7 +104,10 @@ export const storageService = {
     return [];
   },
 
-  async updateStorage(id: string, _updates: Partial<StorageFacility>): Promise<StorageFacility | undefined> {
+  async updateStorage(
+    id: string,
+    _updates: Partial<StorageFacility>,
+  ): Promise<StorageFacility | undefined> {
     return undefined;
   },
 
@@ -101,7 +115,10 @@ export const storageService = {
     return false;
   },
 
-  async updateAvailability(_id: string, _availableTons: number): Promise<StorageFacility | undefined> {
+  async updateAvailability(
+    _id: string,
+    _availableTons: number,
+  ): Promise<StorageFacility | undefined> {
     return undefined;
   },
 
@@ -139,6 +156,9 @@ export const storageService = {
 
   async updateBookingStatus(id: string, status: Booking["status"]): Promise<Booking | undefined> {
     BOOKINGS = BOOKINGS.map((b) => (b.id === id ? { ...b, status } : b));
-    return mockDelay(BOOKINGS.find((b) => b.id === id), 300);
+    return mockDelay(
+      BOOKINGS.find((b) => b.id === id),
+      300,
+    );
   },
 };

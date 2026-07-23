@@ -35,7 +35,10 @@ export const marketPredictionService = {
 
     const gain = data.expected_gain;
     const trend = mapTrend(gain, data.current_price);
-    const confidence = Math.min(96, Math.max(76, Math.round(82 + Math.abs(gain) / 100 + (trend === "Increasing" ? 4 : 0))));
+    const confidence = Math.min(
+      96,
+      Math.max(76, Math.round(82 + Math.abs(gain) / 100 + (trend === "Increasing" ? 4 : 0))),
+    );
 
     return {
       current_price: data.current_price,

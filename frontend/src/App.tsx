@@ -73,59 +73,80 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public marketing pages */}
-            <Route element={<PublicLayout />}>
-              <Route path="/" element={<Landing />} />
-              <Route path="/schemes" element={<Schemes />} />
-              <Route path="/contact" element={<Contact />} />
-            </Route>
+          <BrowserRouter>
+            <Routes>
+              {/* Public marketing pages */}
+              <Route element={<PublicLayout />}>
+                <Route path="/" element={<Landing />} />
+                <Route path="/schemes" element={<Schemes />} />
+                <Route path="/contact" element={<Contact />} />
+              </Route>
 
-            {/* Auth (no shell) */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+              {/* Auth (no shell) */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
 
-            {/* Farmer dashboard */}
-            <Route path="/dashboard" element={<RequireFarmer><FarmerDashboardLayout /></RequireFarmer>}>
-              <Route index element={<DashboardHome />} />
-              <Route path="new-analysis" element={<NewAnalysis />} />
-              <Route path="new-analysis/spoilage" element={<ShelfLifePrediction />} />
-              <Route path="new-analysis/price-prediction" element={<PricePrediction />} />
-              <Route path="new-analysis/complete" element={<CompleteAnalysis />} />
-              <Route path="result/:id" element={<Result />} />
-              <Route path="profit/:id" element={<ProfitSimulator />} />
-              <Route path="market" element={<Market />} />
-              <Route path="cold-storage" element={<ColdStorage />} />
-              <Route path="weather" element={<Weather />} />
-              <Route path="schemes" element={<Schemes />} />
-              <Route path="history" element={<History />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="settings" element={<Settings />} />
-            </Route>
+              {/* Farmer dashboard */}
+              <Route
+                path="/dashboard"
+                element={
+                  <RequireFarmer>
+                    <FarmerDashboardLayout />
+                  </RequireFarmer>
+                }
+              >
+                <Route index element={<DashboardHome />} />
+                <Route path="new-analysis" element={<NewAnalysis />} />
+                <Route path="new-analysis/spoilage" element={<ShelfLifePrediction />} />
+                <Route path="new-analysis/price-prediction" element={<PricePrediction />} />
+                <Route path="new-analysis/complete" element={<CompleteAnalysis />} />
+                <Route path="result/:id" element={<Result />} />
+                <Route path="profit/:id" element={<ProfitSimulator />} />
+                <Route path="market" element={<Market />} />
+                <Route path="cold-storage" element={<ColdStorage />} />
+                <Route path="weather" element={<Weather />} />
+                <Route path="schemes" element={<Schemes />} />
+                <Route path="history" element={<History />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="settings" element={<Settings />} />
+              </Route>
 
-            {/* Storage owner flow */}
-            <Route path="/storage/login" element={<StorageLogin />} />
-            <Route path="/storage/onboarding" element={<RequireOnboarding><StorageOnboarding /></RequireOnboarding>} />
-            <Route path="/storage" element={<RequireStorageOwnerDashboard><StorageLayout /></RequireStorageOwnerDashboard>}>
-              <Route index element={<Navigate to="/storage/dashboard" replace />} />
-              <Route path="dashboard" element={<StorageDashboard />} />
-              <Route path="my-storage" element={<StorageMyStorage />} />
-              <Route path="bookings" element={<StorageBookings />} />
-              <Route path="availability" element={<StorageAvailability />} />
-              <Route path="pricing" element={<StoragePricing />} />
-              <Route path="analytics" element={<StorageAnalytics />} />
-              <Route path="profile" element={<StorageProfile />} />
-              <Route path="settings" element={<StorageSettings />} />
-            </Route>
+              {/* Storage owner flow */}
+              <Route path="/storage/login" element={<StorageLogin />} />
+              <Route
+                path="/storage/onboarding"
+                element={
+                  <RequireOnboarding>
+                    <StorageOnboarding />
+                  </RequireOnboarding>
+                }
+              />
+              <Route
+                path="/storage"
+                element={
+                  <RequireStorageOwnerDashboard>
+                    <StorageLayout />
+                  </RequireStorageOwnerDashboard>
+                }
+              >
+                <Route index element={<Navigate to="/storage/dashboard" replace />} />
+                <Route path="dashboard" element={<StorageDashboard />} />
+                <Route path="my-storage" element={<StorageMyStorage />} />
+                <Route path="bookings" element={<StorageBookings />} />
+                <Route path="availability" element={<StorageAvailability />} />
+                <Route path="pricing" element={<StoragePricing />} />
+                <Route path="analytics" element={<StorageAnalytics />} />
+                <Route path="profile" element={<StorageProfile />} />
+                <Route path="settings" element={<StorageSettings />} />
+              </Route>
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-          <ChatBot crop="" lang={i18n.language || "en"} />
-          <Toaster richColors position="top-right" />
-        </BrowserRouter>
-      </AuthProvider>
-    </ThemeProvider>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+            <ChatBot crop="" lang={i18n.language || "en"} />
+            <Toaster richColors position="top-right" />
+          </BrowserRouter>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

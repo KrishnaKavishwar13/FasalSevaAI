@@ -20,7 +20,9 @@ export function StorageAvailability() {
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Availability</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Adjust capacity visibility and intake availability.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Adjust capacity visibility and intake availability.
+        </p>
       </div>
       {storage.map((facility) => (
         <Card key={facility.id} className="p-6">
@@ -29,7 +31,9 @@ export function StorageAvailability() {
               <h2 className="text-xl font-semibold">{facility.name}</h2>
               <p className="text-sm text-muted-foreground">{facility.address}</p>
             </div>
-            <Button className="gradient-primary text-primary-foreground">Update Availability</Button>
+            <Button className="gradient-primary text-primary-foreground">
+              Update Availability
+            </Button>
           </div>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <div>
@@ -43,7 +47,11 @@ export function StorageAvailability() {
           </div>
           <div className="mt-6">
             <p className="mb-2 text-sm font-medium">Occupancy status</p>
-            <Progress value={Math.round(((facility.capacity_tons - facility.available_tons) / facility.capacity_tons) * 100)} />
+            <Progress
+              value={Math.round(
+                ((facility.capacity_tons - facility.available_tons) / facility.capacity_tons) * 100,
+              )}
+            />
           </div>
         </Card>
       ))}

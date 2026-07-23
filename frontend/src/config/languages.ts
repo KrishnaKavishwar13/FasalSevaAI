@@ -10,5 +10,5 @@ export const SUPPORTED_LANGUAGES = [
   { code: "kn", name: "Kannada", native: "ಕನ್ನಡ" },
   { code: "ml", name: "Malayalam", native: "മലയാളം" },
   { code: "or", name: "Odia", native: "ଓଡ଼ିଆ" },
-  { code: "as", name: "Assamese", native: "অসমীয়া" }
+  { code: "as", name: "Assamese", native: "অসমীয়া" },
 ];

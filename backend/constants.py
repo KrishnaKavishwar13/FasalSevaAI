@@ -12,6 +12,7 @@ STORAGE_HUMIDITY_OFFSET = 8
 
 GOVT_SCHEMES = [
     {
+        "id": "pm_kisan",
         "name": "PM-KISAN Samman Nidhi",
         "hindi_name": "पीएम किसान सम्मान निधि",
         "benefit": "₹6,000 per year directly to bank account in 3 installments",
@@ -21,6 +22,7 @@ GOVT_SCHEMES = [
         "tags": ["all_farmers", "small_farmer"]
     },
     {
+        "id": "pmfby",
         "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
         "hindi_name": "प्रधानमंत्री फसल बीमा योजना",
         "benefit": "Crop insurance — pay only 2% premium, government pays rest",
@@ -30,6 +32,7 @@ GOVT_SCHEMES = [
         "tags": ["high_spoilage_risk", "red_risk", "yellow_risk", "all_farmers"]
     },
     {
+        "id": "kcc",
         "name": "Kisan Credit Card (KCC)",
         "hindi_name": "किसान क्रेडिट कार्ड",
         "benefit": "Up to ₹3 lakh credit at just 4% interest for farming needs",
@@ -39,6 +42,7 @@ GOVT_SCHEMES = [
         "tags": ["all_farmers", "needs_storage_finance", "small_farmer"]
     },
     {
+        "id": "aif",
         "name": "Agricultural Infrastructure Fund (AIF)",
         "hindi_name": "कृषि अवसंरचना कोष",
         "benefit": "Subsidized loan for cold storage, warehouse at 3% interest subsidy",
@@ -48,6 +52,7 @@ GOVT_SCHEMES = [
         "tags": ["needs_cold_storage", "large_quantity", "needs_storage_finance"]
     },
     {
+        "id": "enam",
         "name": "e-NAM (National Agriculture Market)",
         "hindi_name": "ई-नाम राष्ट्रीय कृषि बाजार",
         "benefit": "Sell crop online to buyers across India — better price, no middlemen",
@@ -57,6 +62,7 @@ GOVT_SCHEMES = [
         "tags": ["all_farmers", "low_mandi_price", "option1_best"]
     },
     {
+        "id": "pm_sampada",
         "name": "PM Kisan Sampada Yojana",
         "hindi_name": "पीएम किसान संपदा योजना",
         "benefit": "Government subsidy for cold chain and food processing infrastructure",
@@ -66,6 +72,7 @@ GOVT_SCHEMES = [
         "tags": ["needs_cold_storage", "food_processing", "option3_best"]
     },
     {
+        "id": "soil_health",
         "name": "Soil Health Card Scheme",
         "hindi_name": "मृदा स्वास्थ्य कार्ड योजना",
         "benefit": "Free soil test every 2 years with fertilizer recommendations",
@@ -75,6 +82,7 @@ GOVT_SCHEMES = [
         "tags": ["all_farmers"]
     },
     {
+        "id": "pm_kmy",
         "name": "PM-KMY (Kisan Maan-Dhan Yojana)",
         "hindi_name": "पीएम किसान मानधन योजना",
         "benefit": "₹3,000/month pension after age 60 for small farmers",

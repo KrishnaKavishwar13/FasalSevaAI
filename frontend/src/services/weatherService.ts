@@ -1,19 +1,27 @@
 import type { WeatherReading, RiskLevel } from "@/types";
 
 export const weatherService = {
-  async getWeather(location: string = "Indore, MP", lat: number = 22.7196, lng: number = 75.8577): Promise<WeatherReading> {
+  async getWeather(
+    location: string = "Indore, MP",
+    lat: number = 22.7196,
+    lng: number = 75.8577,
+  ): Promise<WeatherReading> {
     try {
-      const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,precipitation&hourly=precipitation&timezone=auto`);
+      const res = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,precipitation&hourly=precipitation&timezone=auto`,
+      );
       if (!res.ok) throw new Error("Failed to fetch weather");
       const data = await res.json();
-      
+
       const temp = Math.round(data.current.temperature_2m);
       const hum = Math.round(data.current.relative_humidity_2m);
-      const rain48 = data.hourly.precipitation.slice(0, 48).reduce((a: number, b: number) => a + b, 0);
+      const rain48 = data.hourly.precipitation
+        .slice(0, 48)
+        .reduce((a: number, b: number) => a + b, 0);
 
       let alert: RiskLevel = "Green";
       let summary = "Good conditions for temporary storage.";
-      
+
       if (temp > 35 || hum > 80) {
         alert = "Red";
         summary = "High risk of spoilage! Move perishables to cold storage immediately.";
@@ -39,7 +47,8 @@ export const weatherService = {
         rain_next_48h_mm: 4,
         heatwave_risk: "Moderate",
         spoilage_alert: "Yellow",
-        forecast_summary: "Warm and humid — perishables should be moved to controlled storage within 24 hours.",
+        forecast_summary:
+          "Warm and humid — perishables should be moved to controlled storage within 24 hours.",
       };
     }
   },

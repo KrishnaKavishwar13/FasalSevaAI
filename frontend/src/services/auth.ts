@@ -8,13 +8,13 @@ export const authService = {
 
   verifyOtp: async (phone_number: string, otp: string) => {
     const response = await apiClient.post("/auth/verify-otp", { phone_number, otp });
-    
+
     // Store token in localStorage
     if (response.data.access_token) {
       localStorage.setItem("access_token", response.data.access_token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
     }
-    
+
     return response.data;
   },
 
@@ -26,12 +26,12 @@ export const authService = {
   getCurrentUser: async () => {
     const token = localStorage.getItem("access_token");
     if (!token) return null;
-    
+
     try {
       const response = await apiClient.get("/auth/me", {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       return response.data;
     } catch (e) {
@@ -50,5 +50,5 @@ export const authService = {
     } catch {
       return null;
     }
-  }
+  },
 };

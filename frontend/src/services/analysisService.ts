@@ -7,7 +7,7 @@ export const analysisService = {
   async runAnalysis(input: AnalysisInput): Promise<AnalysisResult> {
     const days_stored = Math.max(
       0,
-      Math.floor((Date.now() - new Date(input.harvest_date).getTime()) / (1000 * 60 * 60 * 24))
+      Math.floor((Date.now() - new Date(input.harvest_date).getTime()) / (1000 * 60 * 60 * 24)),
     );
 
     return this.runFull({
@@ -20,7 +20,7 @@ export const analysisService = {
       temp: input.temperature,
       humidity: input.humidity,
       farmer_lat: 22.7196,
-      farmer_lng: 75.8577
+      farmer_lng: 75.8577,
     });
   },
 
@@ -47,7 +47,7 @@ export const analysisService = {
       humidity: input.humidity,
       farmer_lat: input.farmer_lat,
       farmer_lng: input.farmer_lng,
-      language: "hi"
+      language: "hi",
     });
 
     const data = res.data;
@@ -68,7 +68,7 @@ export const analysisService = {
       spoilage: {
         days_remaining: data.spoilage.days_remaining,
         risk_level: data.spoilage.risk_level,
-        storage_viable: data.spoilage.storage_viable
+        storage_viable: data.spoilage.storage_viable,
       },
       price: {
         today: data.price.today,
@@ -92,7 +92,9 @@ export const analysisService = {
         store: {
           revenue: data.options.option2.revenue,
           storage_cost: data.options.option2.storage_cost,
-          transport_cost: data.options.option2.best_storage ? data.options.option2.best_storage.transport_cost : 200,
+          transport_cost: data.options.option2.best_storage
+            ? data.options.option2.best_storage.transport_cost
+            : 200,
           net_profit: data.options.option2.net_profit,
         },
         process: {
@@ -110,9 +112,9 @@ export const analysisService = {
         sell_today_profit: data.options.option1.net_profit,
         industry_profit: data.options.option3.net_profit,
         overall_best: data.best_option,
-        daily_breakdown: data.daily_breakdown
+        daily_breakdown: data.daily_breakdown,
       },
-      govt_schemes: data.govt_schemes
+      govt_schemes: data.govt_schemes,
     };
 
     HISTORY = [mapped, ...HISTORY].slice(0, 20);

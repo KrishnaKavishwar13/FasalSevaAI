@@ -2,9 +2,20 @@
 // crop is a string label on the wire (backend label-encodes internally).
 
 export type CropName =
-  | "Tomato" | "Potato" | "Onion" | "Banana" | "Mango"
-  | "Cauliflower" | "Cabbage" | "Spinach" | "Grapes" | "Guava"
-  | "Carrot" | "Brinjal" | "Wheat" | "Rice";
+  | "Tomato"
+  | "Potato"
+  | "Onion"
+  | "Banana"
+  | "Mango"
+  | "Cauliflower"
+  | "Cabbage"
+  | "Spinach"
+  | "Grapes"
+  | "Guava"
+  | "Carrot"
+  | "Brinjal"
+  | "Wheat"
+  | "Rice";
 
 export type RiskLevel = "Green" | "Yellow" | "Red";
 export type MarketTrend = "Increasing" | "Stable" | "Decreasing";
@@ -13,7 +24,7 @@ export type MarketTrend = "Increasing" | "Stable" | "Decreasing";
 export interface SpoilageInput {
   crop: CropName;
   temperature: number; // °C, 0–45
-  humidity: number;    // %, 40–100
+  humidity: number; // %, 40–100
   days_stored: number; // 0–30
 }
 export interface SpoilageOutput {
@@ -40,8 +51,8 @@ export interface PriceInput {
   crop: CropName;
   state: string;
   current_price: number; // ₹/quintal
-  month: number;         // 1–12
-  week: number;          // 1–52
+  month: number; // 1–12
+  week: number; // 1–52
   target_days?: number;
 }
 export interface PriceOutput {
@@ -83,21 +94,21 @@ export interface AnalysisResult {
   created_at: string;
   spoilage: SpoilageOutput;
   price: {
-    today: number;               // ₹/quintal
-    after_15_days: number;       // ₹/quintal
+    today: number; // ₹/quintal
+    after_15_days: number; // ₹/quintal
     trend: MarketTrend;
   };
   recommendation: {
     action: "Sell Now" | "Store Crop" | "Sell to Processing";
-    duration_days: number;       // 0 if sell-now
-    expected_profit: number;     // ₹
-    confidence: number;          // 0–100
+    duration_days: number; // 0 if sell-now
+    expected_profit: number; // ₹
+    confidence: number; // 0–100
     reason: string;
   };
   profit_options: {
     sell_now: ProfitBreakdown;
-    store:    ProfitBreakdown;
-    process:  ProfitBreakdown;
+    store: ProfitBreakdown;
+    process: ProfitBreakdown;
   };
   govt_schemes?: any[];
   bestDay?: {

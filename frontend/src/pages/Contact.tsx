@@ -21,14 +21,21 @@ export function Contact() {
         className="mx-auto max-w-2xl text-center"
       >
         <p className="text-sm font-semibold uppercase tracking-wider text-primary">Get in touch</p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Contact FasalSeva</h1>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+          Contact FasalSeva
+        </h1>
         <p className="mt-4 text-muted-foreground">
-          Have questions about our AI decision engine? Want to partner as a cold storage facility? We're here to help.
+          Have questions about our AI decision engine? Want to partner as a cold storage facility?
+          We're here to help.
         </p>
       </motion.div>
 
       <div className="mt-16 grid gap-8 md:grid-cols-2">
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+        >
           <Card className="p-8 shadow-card">
             <h3 className="text-xl font-semibold">Send us a message</h3>
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -48,7 +55,12 @@ export function Contact() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="message">Message</Label>
-                <Textarea id="message" required placeholder="How can we help you?" className="min-h-[120px]" />
+                <Textarea
+                  id="message"
+                  required
+                  placeholder="How can we help you?"
+                  className="min-h-[120px]"
+                />
               </div>
               <Button type="submit" className="w-full gradient-primary text-primary-foreground">
                 <Send className="mr-2 h-4 w-4" /> Send message
@@ -57,10 +69,17 @@ export function Contact() {
           </Card>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="space-y-8 lg:pl-10">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="space-y-8 lg:pl-10"
+        >
           <div>
             <h3 className="text-xl font-semibold">Contact Information</h3>
-            <p className="mt-2 text-muted-foreground">Reach out to us directly through any of these channels.</p>
+            <p className="mt-2 text-muted-foreground">
+              Reach out to us directly through any of these channels.
+            </p>
           </div>
           <div className="space-y-6">
             <div className="flex items-center gap-4">

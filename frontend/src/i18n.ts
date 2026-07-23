@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 
 // Load all JSON files dynamically from locales folder
-const localeModules = import.meta.glob('./locales/*.json', { eager: true });
+const localeModules = import.meta.glob("./locales/*.json", { eager: true });
 
 const resources: Record<string, { translation: any }> = {};
 
@@ -23,6 +23,7 @@ i18n
   .init({
     resources,
     fallbackLng: "en",
+    keySeparator: false,
     interpolation: {
       escapeValue: false,
     },

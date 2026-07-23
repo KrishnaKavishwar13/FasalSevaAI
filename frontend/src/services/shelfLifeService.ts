@@ -12,8 +12,7 @@ function getConfidence(riskLevel: RiskLevel): number {
 }
 
 function getRecommendation(riskLevel: RiskLevel, daysRemaining: number): string {
-  if (riskLevel === "Green")
-    return `Crop can safely be stored for another ${daysRemaining} days.`;
+  if (riskLevel === "Green") return `Crop can safely be stored for another ${daysRemaining} days.`;
   if (riskLevel === "Yellow")
     return `Monitor storage closely; remaining life is limited to ${daysRemaining} days.`;
   return `Immediate action is recommended; spoilage risk is high within ${daysRemaining} days.`;

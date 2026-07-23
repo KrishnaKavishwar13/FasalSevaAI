@@ -78,16 +78,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "FasalSeva AI — Post-Harvest Decision Intelligence" },
-      { name: "description", content: "AI shelf-life prediction, mandi price forecasting and cold storage for Indian farmers." },
+      {
+        name: "description",
+        content:
+          "AI shelf-life prediction, mandi price forecasting and cold storage for Indian farmers.",
+      },
       { property: "og:title", content: "FasalSeva AI" },
-      { property: "og:description", content: "Sell, wait, or store — an AI decision engine for post-harvest India." },
+      {
+        property: "og:description",
+        content: "Sell, wait, or store — an AI decision engine for post-harvest India.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
+      },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
