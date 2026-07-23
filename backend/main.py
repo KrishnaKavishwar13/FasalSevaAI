@@ -6,11 +6,13 @@ from routers.chat import router as chat_router
 from routers.data import router as data_router
 from routers.locations import router as locations_router
 from database import init_db
+from auth.repository import init_auth_db
 
 app = FastAPI(title="FasalSeva API")
 
-# Initialize SQLite database
+# Initialize databases
 init_db()
+init_auth_db()
 
 app.include_router(auth_router)
 app.include_router(analysis_router)

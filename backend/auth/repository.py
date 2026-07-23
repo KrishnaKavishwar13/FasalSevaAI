@@ -92,5 +92,3 @@ def create_user(phone_number: str, name: str, role: str):
     conn.close()
     return dict(row) if row else None
 
-# Initialize table on import
-init_auth_db()
