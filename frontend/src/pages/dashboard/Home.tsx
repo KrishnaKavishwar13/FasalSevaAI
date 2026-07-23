@@ -65,12 +65,13 @@ export function DashboardHome() {
     }
   };
 
-  const finishOnboarding = () => {
+  const finishOnboarding = (crop?: string) => {
     if (!user) return;
+    const finalCrop = crop || selectedCrop;
     const updatedUser: AuthUser = {
       ...user,
       onboarded: true,
-      mainCrop: selectedCrop,
+      mainCrop: finalCrop,
       state: selectedState,
       lat, lng
     };
@@ -153,7 +154,7 @@ export function DashboardHome() {
                 </div>
                 <div className="grid grid-cols-2 gap-2 max-h-[300px] overflow-y-auto pr-2 pb-2">
                   {CROPS.map(c => (
-                    <button key={c.name} onClick={() => { setSelectedCrop(c.name); setOnboardingStep(3); }}
+                    <button key={c.name} onClick={() => finishOnboarding(c.name)}
                       className={`p-3 rounded-xl border text-left flex items-center gap-2 hover:bg-muted transition ${selectedCrop===c.name?'border-primary bg-primary/5':''}`}>
                       <span className="text-xl">{c.emoji}</span> <span>{c.name}</span>
                     </button>
@@ -162,21 +163,6 @@ export function DashboardHome() {
               </motion.div>
             )}
 
-            {onboardingStep === 3 && (
-              <motion.div key="step3" initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} exit={{opacity:0, x:-20}} className="space-y-6">
-                <div>
-                  <h2 className="text-2xl font-bold">{t("onboarding.step3_title", "Which state are you in?")}</h2>
-                  <p className="mt-2 text-muted-foreground text-sm">{t("onboarding.step3_subtitle", "Market prices depend on the state.")}</p>
-                </div>
-                <select value={selectedState} onChange={e => setSelectedState(e.target.value)} className="w-full p-3 rounded-xl border bg-background">
-                  <option>Madhya Pradesh</option>
-                  <option>Maharashtra</option>
-                  <option>Gujarat</option>
-                  <option>Uttar Pradesh</option>
-                </select>
-                <Button onClick={finishOnboarding} className="w-full h-12 text-lg">{t("onboarding.go_to_dashboard", "Go to dashboard")} <ArrowRight className="ml-2" /></Button>
-              </motion.div>
-            )}
           </AnimatePresence>
         </Card>
       </div>

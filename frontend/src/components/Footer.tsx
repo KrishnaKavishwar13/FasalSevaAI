@@ -29,8 +29,6 @@ export function Footer() {
           <div>
             <h4 className="text-sm font-semibold">{t("footer_quick_links", "Quick links")}</h4>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/dashboard" className="hover:text-foreground">{t("nav.dashboard", "Dashboard")}</Link></li>
-              <li><Link to="/dashboard/cold-storage" className="hover:text-foreground">{t("nav.cold_storage", "Cold Storage")}</Link></li>
               <li><Link to="/schemes" className="hover:text-foreground">{t("nav.schemes", "Government Schemes")}</Link></li>
               <li><Link to="/login" className="hover:text-foreground">{t("auth.login", "Login")}</Link></li>
             </ul>

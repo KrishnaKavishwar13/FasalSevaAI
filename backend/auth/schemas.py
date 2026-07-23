@@ -12,6 +12,8 @@ class VerifyOTPRequest(BaseModel):
     # pyrefly: ignore [invalid-annotation]
     phone_number: constr(pattern=r'^(?:\+91|91)?[6-9]\d{9}$')
     otp: str
+    name: str | None = None
+    role: str | None = None
 
 class VerifyOTPResponse(BaseModel):
     access_token: str

@@ -2,6 +2,7 @@ from fastapi import HTTPException, status
 from .otp_service import OTPService
 from .jwt_service import JWTService
 from .schemas import SendOTPResponse, VerifyOTPResponse
+from .repository import get_user_by_phone, create_user
 
 class AuthService:
     @staticmethod
@@ -21,7 +22,7 @@ class AuthService:
             )
 
     @staticmethod
-    def verify_otp(phone_number: str, otp_code: str) -> VerifyOTPResponse:
+    def verify_otp(phone_number: str, otp_code: str, name: str = None, role: str = None) -> VerifyOTPResponse:
         is_valid = OTPService.verify_otp(phone_number, otp_code)
         
         if not is_valid:
@@ -30,16 +31,25 @@ class AuthService:
                 detail="Invalid or expired OTP."
             )
             
+        # Check if user exists
+        user = get_user_by_phone(phone_number)
+        if not user:
+            # Create user
+            if not name:
+                name = f"User {phone_number[-4:]}"
+            if not role:
+                role = "farmer"
+            user = create_user(phone_number, name, role)
+            
         # Create JWT token
-        # In a real app, you'd check if user exists in the database and create if not.
-        # For this prototype, we'll just encode the phone number in the JWT.
         token = JWTService.create_access_token({"sub": phone_number})
         
         return VerifyOTPResponse(
             access_token=token,
             user={
-                "phone_number": phone_number,
-                "role": "farmer", # default role
-                "name": f"User {phone_number[-4:]}" # Generate a dummy name
+                "id": str(user['id']),
+                "phone_number": user['phone_number'],
+                "role": user['role'],
+                "name": user['name']
             }
         )

@@ -47,8 +47,8 @@ export function Login() {
     setLoading(true);
     try {
       if (step === "phone") {
-        if (!/^\d{10}$/.test(phone)) {
-          toast.error(t("auth.login_error_phone", "Enter a 10-digit phone number"));
+        if (!/^[6-9]\d{9}$/.test(phone)) {
+          toast.error(t("auth.login_error_phone", "Enter a valid indian mobile number"));
           setLoading(false);
           return;
         }

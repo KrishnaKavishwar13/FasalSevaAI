@@ -176,10 +176,21 @@
     font-family: var(--font-sans);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+  }
+  input, textarea {
+    user-select: text;
+    -webkit-user-select: text;
+    cursor: text;
+  }
+  a, button, [role="button"] {
+    cursor: pointer;
   }
 }
 

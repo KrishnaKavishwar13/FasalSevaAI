@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { StatCounter } from "@/components/StatCounter";
-import { ArrowRight, PlayCircle, Sparkles, Timer, LineChart, Warehouse, Cloud, Mic, Calculator, Landmark, Scan, Leaf } from "lucide-react";
+import { ArrowRight, PlayCircle, Sparkles, Timer, LineChart, Warehouse, Cloud, Mic, Calculator, Landmark, Scan, Leaf, Wheat, Carrot, Apple, Sprout } from "lucide-react";
 import heroImg from "@/assets/hero-farmer.jpg";
 import coldStorageImg from "@/assets/cold-storage.jpg";
 import marketImg from "@/assets/market-produce.jpg";
@@ -12,7 +12,7 @@ import i18n from "i18next";
 
 
 
-const FloatingLeaf = ({ delay, x, y, size, rotateStart, rotateEnd, duration }: { delay: number; x: number; y: number; size: number, rotateStart: number, rotateEnd: number, duration: number }) => (
+const FloatingIcon = ({ icon: Icon, delay, x, y, size, rotateStart, rotateEnd, duration }: { icon: any, delay: number; x: number; y: number; size: number, rotateStart: number, rotateEnd: number, duration: number }) => (
   <motion.div
     initial={{ y: 0, x: 0, opacity: 0, rotate: rotateStart }}
     animate={{ 
@@ -25,7 +25,7 @@ const FloatingLeaf = ({ delay, x, y, size, rotateStart, rotateEnd, duration }: {
     className="absolute text-primary pointer-events-none hidden md:block"
     style={{ left: `${x}%`, top: `${y}%` }}
   >
-    <Leaf size={size} strokeWidth={1.5} />
+    <Icon size={size} strokeWidth={1.5} />
   </motion.div>
 );
 
@@ -63,11 +63,16 @@ export function Landing() {
       <section className="relative overflow-hidden gradient-hero min-h-[90vh] flex items-center">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <FloatingLeaf delay={0} x={10} y={20} size={32} rotateStart={0} rotateEnd={45} duration={12} />
-          <FloatingLeaf delay={2} x={85} y={15} size={48} rotateStart={-20} rotateEnd={20} duration={15} />
-          <FloatingLeaf delay={4} x={15} y={75} size={24} rotateStart={45} rotateEnd={90} duration={10} />
-          <FloatingLeaf delay={1} x={90} y={80} size={36} rotateStart={-45} rotateEnd={0} duration={14} />
-          <FloatingLeaf delay={3} x={45} y={10} size={20} rotateStart={10} rotateEnd={60} duration={11} />
+          <FloatingIcon icon={Leaf} delay={0} x={10} y={20} size={32} rotateStart={0} rotateEnd={45} duration={12} />
+          <FloatingIcon icon={Wheat} delay={2} x={85} y={15} size={48} rotateStart={-20} rotateEnd={20} duration={15} />
+          <FloatingIcon icon={Sprout} delay={4} x={15} y={75} size={24} rotateStart={45} rotateEnd={90} duration={10} />
+          <FloatingIcon icon={Carrot} delay={1} x={90} y={80} size={36} rotateStart={-45} rotateEnd={0} duration={14} />
+          <FloatingIcon icon={Leaf} delay={3} x={45} y={10} size={20} rotateStart={10} rotateEnd={60} duration={11} />
+          <FloatingIcon icon={Wheat} delay={5} x={70} y={30} size={28} rotateStart={-10} rotateEnd={30} duration={13} />
+          <FloatingIcon icon={Apple} delay={1.5} x={25} y={40} size={32} rotateStart={15} rotateEnd={45} duration={16} />
+          <FloatingIcon icon={Sprout} delay={0.5} x={60} y={85} size={26} rotateStart={-30} rotateEnd={10} duration={12} />
+          <FloatingIcon icon={Leaf} delay={2.5} x={35} y={65} size={40} rotateStart={0} rotateEnd={90} duration={14} />
+          <FloatingIcon icon={Carrot} delay={4.5} x={5} y={50} size={22} rotateStart={20} rotateEnd={-20} duration={9} />
         </div>
         
         <div className="mx-auto grid max-w-7xl gap-10 px-4 pb-16 pt-14 sm:px-6 md:grid-cols-2 md:items-center md:pb-24 md:pt-20">
@@ -85,7 +90,7 @@ export function Landing() {
             <motion.p {...fade} transition={{ ...fade.transition, delay: 0.1 }} className="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg" dangerouslySetInnerHTML={{ __html: t("hero_subtitle", "Knowing today's price isn't enough. FasalSeva AI tells you whether to <b class=\"text-foreground\">sell now</b>, <b class=\"text-foreground\">wait</b>, or <b class=\"text-foreground\">store</b> — based on how long your crop will last and where prices are heading.") }} />
             <motion.div {...fade} transition={{ ...fade.transition, delay: 0.2 }} className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="gradient-primary text-primary-foreground shadow-elegant">
-                <Link to="/dashboard/new-analysis">{t("hero_cta_start", "Start Analysis")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Link to="/login">{t("hero_cta_start", "Start Analysis")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
               <Button size="lg" variant="outline"><PlayCircle className="mr-2 h-4 w-4" /> {t("hero_cta_demo", "Watch demo")}</Button>
             </motion.div>
@@ -207,7 +212,7 @@ export function Landing() {
             </div>
             <div className="flex gap-3">
               <Button asChild size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
-                <Link to="/dashboard/new-analysis">{t("cta_demo", "Try demo")}</Link>
+                <Link to="/login">{t("cta_demo", "Try demo")}</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-white/40 bg-transparent text-primary-foreground hover:bg-white/10">
                 <Link to="/signup">{t("cta_signup", "Create account")}</Link>

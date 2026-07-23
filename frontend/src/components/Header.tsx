@@ -12,17 +12,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SUPPORTED_LANGUAGES } from "@/config/languages";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Header() {
   const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
 
   const NAV = [
     { to: "/", label: t("nav.home", "Home") },
     { to: "/#features", label: t("nav.features", "Features") },
     { to: "/#workflow", label: t("nav.workflow", "How It Works") },
-    { to: "/dashboard", label: t("nav.dashboard", "Dashboard") },
     { to: "/schemes", label: t("nav.schemes", "Schemes") },
     { to: "/contact", label: t("nav.contact", "Contact Us") },
   ];
@@ -40,13 +41,35 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {NAV.map((n) => (
-            <NavLink key={n.to} to={n.to} className={({ isActive }) =>
-              `rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted ${
-                isActive && n.to !== "/#features" && n.to !== "/#workflow" ? "text-primary" : "text-foreground/80"
-              }`
-            }>{n.label}</NavLink>
-          ))}
+          {NAV.map((n) => {
+            const isHash = n.to.startsWith("/#");
+            if (isHash) {
+              return (
+                <a
+                  key={n.to}
+                  href={n.to}
+                  onClick={(e) => {
+                    if (window.location.pathname === "/") {
+                      e.preventDefault();
+                      const id = n.to.replace("/#", "#");
+                      const el = document.querySelector(id);
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted text-foreground/80"
+                >
+                  {n.label}
+                </a>
+              );
+            }
+            return (
+              <NavLink key={n.to} to={n.to} className={({ isActive }) =>
+                `rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-muted ${
+                  isActive ? "text-primary" : "text-foreground/80"
+                }`
+              }>{n.label}</NavLink>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -86,10 +109,33 @@ export function Header() {
             className="lg:hidden overflow-hidden border-t border-border/60 bg-background"
           >
             <div className="flex flex-col gap-1 px-4 py-3">
-              {NAV.map((n) => (
-                <Link key={n.to} to={n.to} onClick={() => setOpen(false)}
-                  className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted">{n.label}</Link>
-              ))}
+              {NAV.map((n) => {
+                const isHash = n.to.startsWith("/#");
+                if (isHash) {
+                  return (
+                    <a
+                      key={n.to}
+                      href={n.to}
+                      onClick={(e) => {
+                        setOpen(false);
+                        if (window.location.pathname === "/") {
+                          e.preventDefault();
+                          const id = n.to.replace("/#", "#");
+                          const el = document.querySelector(id);
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                      className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
+                    >
+                      {n.label}
+                    </a>
+                  );
+                }
+                return (
+                  <Link key={n.to} to={n.to} onClick={() => setOpen(false)}
+                    className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted">{n.label}</Link>
+                );
+              })}
               <div className="mt-2 flex gap-2">
                 <Button asChild variant="outline" className="flex-1"><Link to="/login">{t("auth.login", "Login")}</Link></Button>
                 <Button asChild className="flex-1 gradient-primary text-primary-foreground"><Link to="/signup">{t("auth.get_started", "Get started")}</Link></Button>

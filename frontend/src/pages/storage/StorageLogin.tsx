@@ -47,8 +47,8 @@ export function StorageLogin() {
     e.preventDefault();
     setLoading(true);
     try {
-      if (!/^\d{10}$/.test(phone)) {
-        toast.error("Enter a valid 10-digit phone number");
+      if (!/^[6-9]\d{9}$/.test(phone)) {
+        toast.error("Enter a valid indian mobile number");
         setLoading(false);
         return;
       }

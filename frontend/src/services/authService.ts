@@ -42,7 +42,12 @@ export const authService = {
     const role = pending?.role ?? "farmer";
     
     const formattedPhone = phone.startsWith('+') ? phone : `+91${phone}`;
-    const response = await apiClient.post("/auth/verify-otp", { phone_number: formattedPhone, otp });
+    const response = await apiClient.post("/auth/verify-otp", { 
+      phone_number: formattedPhone, 
+      otp,
+      name: pending?.name || name,
+      role
+    });
     
     // Fallback ID and role if backend doesn't provide it yet
     const backendUser = response.data.user;

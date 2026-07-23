@@ -51,7 +51,7 @@ export function Signup() {
     try {
       if (step === "form") {
         if (!name.trim()) { toast.error(t("auth.signup_error_name", "Enter your name")); setLoading(false); return; }
-        if (!/^\d{10}$/.test(phone)) { toast.error(t("auth.signup_error_phone", "Enter a 10-digit phone")); setLoading(false); return; }
+        if (!/^[6-9]\d{9}$/.test(phone)) { toast.error(t("auth.signup_error_phone", "Enter a valid indian mobile number")); setLoading(false); return; }
         await authService.signup(name, phone, role);
         setStep("otp");
         setCountdown(60);

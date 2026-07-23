@@ -24,7 +24,7 @@ def send_otp(request: SendOTPRequest):
 
 @auth_router.post("/verify-otp", response_model=VerifyOTPResponse)
 def verify_otp(request: VerifyOTPRequest):
-    return AuthService.verify_otp(request.phone_number, request.otp)
+    return AuthService.verify_otp(request.phone_number, request.otp, request.name, request.role)
 
 @auth_router.get("/me", response_model=UserResponse)
 def get_me(user: dict = Depends(get_current_user)):

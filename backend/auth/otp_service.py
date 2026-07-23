@@ -32,6 +32,22 @@ class OTPService:
         Verifies the OTP for the given phone number.
         Returns True if valid, False otherwise.
         """
-        # Bypass OTP check completely as requested
-        print(f"Log: OTP Verified successfully (Bypassed) for {phone_number} with OTP {otp_code}")
+        active_otp = get_active_otp(phone_number)
+        
+        if not active_otp:
+            print(f"Log: No active OTP found for {phone_number}")
+            return False
+            
+        # Check expiry
+        if datetime.utcnow() > active_otp['expires_at']:
+            print(f"Log: OTP expired for {phone_number}")
+            return False
+            
+        if active_otp['otp_code'] != otp_code:
+            print(f"Log: Invalid OTP for {phone_number}")
+            return False
+            
+        # Mark as used
+        mark_otp_used(active_otp['id'])
+        print(f"Log: OTP Verified successfully for {phone_number} with OTP {otp_code}")
         return True
