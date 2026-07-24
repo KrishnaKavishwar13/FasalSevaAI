@@ -8,5 +8,4 @@ requests
 python-dotenv
 numpy
 psycopg2-binary
-firebase-admin
 PyJWT
